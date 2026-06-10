@@ -7,7 +7,7 @@
 - :white_check_mark: CrewAI, AutoGen, LangChain, Claude Agent SDK wrappers
 - :white_check_mark: MTTR and reliability metrics
 - :white_check_mark: Multi-format reporting (terminal, JSON, Markdown, HTML)
-- :white_check_mark: CLI (`balaganagent` command)
+- :white_check_mark: CLI (`sentinelai` command)
 - :white_check_mark: Comprehensive test suite (unit, integration, BDD, E2E)
 - :white_check_mark: LangGraph wrapper with node-level chaos injection
 
@@ -29,4 +29,4 @@
 
 ---
 
-Have an idea? [Open a discussion](https://github.com/arielshad/balagan-agent/discussions).
+Have an idea? [Open a discussion](https://github.com/arielshad/sentinel-ai/discussions).

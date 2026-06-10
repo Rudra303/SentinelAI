@@ -1,25 +1,25 @@
-# BalaganAgent
+# SentinelAI
 
 > Chaos Engineering for AI Agents. Reliability testing framework that stress-tests AI agents through controlled fault injection.
 
 ## Overview
 
-BalaganAgent brings battle-tested chaos engineering principles (Chaos Monkey, Gremlin) to AI agents. It injects controlled failures into agent tool calls, measures recovery, and scores reliability using SRE-grade metrics.
+SentinelAI brings battle-tested chaos engineering principles (Chaos Monkey, Gremlin) to AI agents. It injects controlled failures into agent tool calls, measures recovery, and scores reliability using SRE-grade metrics.
 
-- **Package**: `balagan-agent` on PyPI
+- **Package**: `sentinel-ai` on PyPI
 - **Version**: 0.3.1
 - **License**: Apache 2.0
 - **Python**: >= 3.10
-- **Repository**: https://github.com/arielshad/balagan-agent
+- **Repository**: https://github.com/arielshad/sentinel-ai
 
 ## Quick Start
 
 ```bash
-pip install balagan-agent
+pip install sentinel-ai
 ```
 
 ```python
-from balaganagent import ChaosEngine, AgentWrapper
+from sentinelai import ChaosEngine, AgentWrapper
 
 wrapper = AgentWrapper(agent, chaos_level=0.5)
 wrapper.configure_chaos(enable_tool_failures=True)
@@ -29,10 +29,10 @@ metrics = wrapper.get_metrics()
 
 ## Supported Agent Frameworks
 
-- **CrewAI** (>= 0.28.0) — `balaganagent.wrappers.crewai.CrewAIWrapper`
-- **AutoGen** (>= 0.2.0) — `balaganagent.wrappers.autogen.AutoGenWrapper`
-- **LangChain** (>= 0.1.0) — `balaganagent.wrappers.langchain.LangChainAgentWrapper`
-- **Claude Agent SDK** (>= 0.1.0) — `balaganagent.wrappers.claude_sdk.ClaudeAgentSDKWrapper`
+- **CrewAI** (>= 0.28.0) — `sentinelai.wrappers.crewai.CrewAIWrapper`
+- **AutoGen** (>= 0.2.0) — `sentinelai.wrappers.autogen.AutoGenWrapper`
+- **LangChain** (>= 0.1.0) — `sentinelai.wrappers.langchain.LangChainAgentWrapper`
+- **Claude Agent SDK** (>= 0.1.0) — `sentinelai.wrappers.claude_sdk.ClaudeAgentSDKWrapper`
 
 ## Architecture
 
@@ -44,25 +44,25 @@ The wrapper intercepts tool calls, routes them through configured injectors, rec
 
 ## Core Modules
 
-### Engine (`balaganagent/engine.py`)
+### Engine (`sentinelai/engine.py`)
 Orchestrates chaos experiments. Manages injector lifecycle, experiment context, and result collection.
 
-### Wrapper (`balaganagent/wrapper.py`)
+### Wrapper (`sentinelai/wrapper.py`)
 Base agent wrapper. Intercepts tool calls, applies chaos injection, collects per-tool metrics.
 
-### Experiment (`balaganagent/experiment.py`)
+### Experiment (`sentinelai/experiment.py`)
 Experiment definitions, configuration dataclasses, and result tracking.
 
-### Runner (`balaganagent/runner.py`)
+### Runner (`sentinelai/runner.py`)
 Scenario-based experiment runner with multi-framework support and stress testing at escalating chaos levels.
 
-### Reporting (`balaganagent/reporting.py`)
+### Reporting (`sentinelai/reporting.py`)
 Report generation in JSON, Markdown, HTML, and terminal formats.
 
-### CLI (`balaganagent/cli.py`)
+### CLI (`sentinelai/cli.py`)
 Commands: `run`, `stress`, `demo`, `init`.
 
-## Fault Injectors (`balaganagent/injectors/`)
+## Fault Injectors (`sentinelai/injectors/`)
 
 All injectors inherit from `BaseInjector` with probability-based injection and target tool filtering.
 
@@ -81,7 +81,7 @@ Corrupts context: truncation, reordering, noise injection, encoding issues.
 ### Budget Exhaustion (`injectors/budget.py`)
 Simulates resource limits: token limits, cost caps, rate limiting, call quotas.
 
-## Metrics (`balaganagent/metrics/`)
+## Metrics (`sentinelai/metrics/`)
 
 ### Collector (`metrics/collector.py`)
 General metrics: operation counts, latency tracking, success rates.
@@ -95,11 +95,11 @@ Recovery quality analysis: did the agent recover correctly or just fail graceful
 ### Reliability (`metrics/reliability.py`)
 SRE-grade reliability scoring from "5 nines" (99.999%) down to "1 nine" (90%). Includes availability calculation, error budget tracking, and SLO compliance.
 
-## Framework Wrappers (`balaganagent/wrappers/`)
+## Framework Wrappers (`sentinelai/wrappers/`)
 
 ### CrewAI (`wrappers/crewai.py`)
 ```python
-from balaganagent.wrappers.crewai import CrewAIWrapper
+from sentinelai.wrappers.crewai import CrewAIWrapper
 wrapper = CrewAIWrapper(crew, chaos_level=0.5)
 wrapper.configure_chaos(enable_tool_failures=True)
 result = wrapper.kickoff()
@@ -107,21 +107,21 @@ result = wrapper.kickoff()
 
 ### AutoGen (`wrappers/autogen.py`)
 ```python
-from balaganagent.wrappers.autogen import AutoGenWrapper
+from sentinelai.wrappers.autogen import AutoGenWrapper
 wrapper = AutoGenWrapper(user_proxy, agents, chaos_level=0.5)
 result = wrapper.initiate_chat(...)
 ```
 
 ### LangChain (`wrappers/langchain.py`)
 ```python
-from balaganagent.wrappers.langchain import LangChainAgentWrapper
+from sentinelai.wrappers.langchain import LangChainAgentWrapper
 wrapper = LangChainAgentWrapper(agent, chaos_level=0.5)
 result = wrapper.run(...)
 ```
 
 ### Claude Agent SDK (`wrappers/claude_sdk.py`)
 ```python
-from balaganagent.wrappers.claude_sdk import ClaudeAgentSDKWrapper
+from sentinelai.wrappers.claude_sdk import ClaudeAgentSDKWrapper
 wrapper = ClaudeAgentSDKWrapper(tools=tools, chaos_level=0.5)
 tools = wrapper.get_wrapped_tools()
 server = wrapper.create_mcp_server(name="tools", version="1.0.0")
@@ -136,7 +136,7 @@ server = wrapper.create_mcp_server(name="tools", version="1.0.0")
 - `claude_sdk_agent.py` — Basic Claude Agent SDK integration
 - `claude_sdk_research_agent.py` — Multi-tool research agent with Claude SDK
 - `claude_sdk_research_chaos_example.py` — Chaos testing with Claude SDK
-- `balagan_research_agent_example.py` — Comprehensive multi-mode integration example
+- `sentinel_research_agent_example.py` — Comprehensive multi-mode integration example
 - `stress_test.py` — Stress testing example
 
 ## Configuration
@@ -160,8 +160,8 @@ pytest tests/e2e/                # End-to-end tests
 
 Install framework-specific extras:
 ```bash
-pip install balagan-agent[crewai]
-pip install balagan-agent[autogen]
-pip install balagan-agent[langchain]
-pip install balagan-agent[dev]        # Development tools
+pip install sentinel-ai[crewai]
+pip install sentinel-ai[autogen]
+pip install sentinel-ai[langchain]
+pip install sentinel-ai[dev]        # Development tools
 ```

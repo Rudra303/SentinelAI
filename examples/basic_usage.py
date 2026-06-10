@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Basic usage example for BalaganAgent.
+Basic usage example for SentinelAI.
 
 This example demonstrates how to:
 1. Create a simple agent with tools
@@ -9,9 +9,9 @@ This example demonstrates how to:
 4. Generate reliability reports
 """
 
-from balaganagent import AgentWrapper, ChaosEngine, ExperimentRunner
-from balaganagent.reporting import ReportGenerator
-from balaganagent.runner import scenario
+from sentinelai import AgentWrapper, ChaosEngine, ExperimentRunner
+from sentinelai.reporting import ReportGenerator
+from sentinelai.runner import scenario
 
 
 # Define a simple agent with tools
@@ -215,7 +215,7 @@ def example_report_generation():
 def main():
     """Run all examples."""
     print("\n" + "#" * 60)
-    print("#  BALAGANAGENT EXAMPLES")
+    print("#  SENTINELAGENT EXAMPLES")
     print("#" * 60)
 
     example_basic_wrapping()

@@ -1,30 +1,27 @@
-"""LangGraph wrapper for chaos injection.
+"""LangChain wrapper for chaos injection.
 
-This module provides chaos engineering capabilities for LangGraph state graphs.
-It wraps LangGraph compiled graphs and their tools/nodes to enable fault injection
-during graph execution.
+This module provides chaos engineering capabilities for LangChain agents and chains.
+It wraps LangChain tools and enables fault injection during agent execution.
 
 Example usage:
-    from langgraph.graph import StateGraph
-    from balaganagent.wrappers.langgraph import LangGraphWrapper
+    from langchain.agents import AgentExecutor
+    from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
-    # Build and compile your graph
-    graph = StateGraph(AgentState)
-    # ... add nodes and edges ...
-    compiled = graph.compile()
+    # Create your agent executor
+    agent_executor = AgentExecutor(agent=agent, tools=tools)
 
     # Wrap with chaos
-    wrapper = LangGraphWrapper(compiled, chaos_level=0.5)
+    wrapper = LangChainAgentWrapper(agent_executor, chaos_level=0.5)
     wrapper.configure_chaos(enable_tool_failures=True, enable_delays=True)
 
     # Run with chaos injection
-    result = wrapper.invoke({"messages": [HumanMessage(content="Hello")]})
+    result = wrapper.invoke({"input": "Hello"})
 """
 
 import time
 from contextlib import contextmanager
 from dataclasses import dataclass
-from typing import Any, AsyncIterator, Callable, Iterator, Optional
+from typing import Any, AsyncIterator, Iterator, Optional
 
 from ..experiment import Experiment, ExperimentConfig, ExperimentResult
 from ..injectors import (
@@ -35,14 +32,12 @@ from ..injectors import (
     HallucinationInjector,
     ToolFailureInjector,
 )
-from ..injectors.base import FaultType
 from ..metrics import MetricsCollector, MTTRCalculator
-from ..verbose import get_logger
 
 
 @dataclass
-class LangGraphToolCall:
-    """Record of a LangGraph tool call."""
+class LangChainToolCall:
+    """Record of a LangChain tool call."""
 
     tool_name: str
     args: tuple
@@ -53,7 +48,6 @@ class LangGraphToolCall:
     error: Optional[str] = None
     fault_injected: Optional[str] = None
     retries: int = 0
-    node_name: Optional[str] = None
 
     @property
     def duration_ms(self) -> float:
@@ -67,33 +61,20 @@ class LangGraphToolCall:
 
 
 @dataclass
-class LangGraphNodeEvent:
-    """Record of a LangGraph node execution."""
+class CallbackEvent:
+    """Record of a callback event."""
 
-    node_name: str
-    start_time: float
-    end_time: Optional[float] = None
-    error: Optional[str] = None
-    fault_injected: Optional[str] = None
-
-    @property
-    def duration_ms(self) -> float:
-        if self.end_time is None:
-            return 0.0
-        return (self.end_time - self.start_time) * 1000
-
-    @property
-    def success(self) -> bool:
-        return self.error is None
+    event_type: str
+    timestamp: float
+    data: dict
 
 
-class LangGraphToolProxy:
+class LangChainToolProxy:
     """
-    Proxy for LangGraph tool objects that enables chaos injection.
+    Proxy for LangChain tool objects that enables chaos injection.
 
-    LangGraph tools are LangChain-compatible BaseTool objects with `name`
-    and `func` attributes. This proxy wraps the tool's function to inject
-    faults, record call history, and collect metrics.
+    LangChain tools have a specific structure with `name` and `func` attributes.
+    This proxy wraps the tool's function to inject faults.
     """
 
     def __init__(
@@ -102,19 +83,25 @@ class LangGraphToolProxy:
         chaos_level: float = 0.0,
         max_retries: int = 3,
         retry_delay: float = 0.1,
-        verbose: bool = False,
     ):
+        """
+        Initialize the tool proxy.
+
+        Args:
+            tool: LangChain tool object with `name` and `func` attributes
+            chaos_level: Chaos level (0.0 = no chaos, 1.0 = full chaos)
+            max_retries: Maximum retry attempts on failure
+            retry_delay: Delay between retries in seconds
+        """
         self._tool = tool
         self._tool_name = getattr(tool, "name", str(tool))
         self._func = getattr(tool, "func", tool)
         self._chaos_level = chaos_level
         self._max_retries = max_retries
         self._retry_delay = retry_delay
-        self.verbose = verbose
-        self._logger = get_logger()
 
         self._injectors: list[BaseInjector] = []
-        self._call_history: list[LangGraphToolCall] = []
+        self._call_history: list[LangChainToolCall] = []
         self._metrics = MetricsCollector()
         self._mttr = MTTRCalculator()
 
@@ -136,7 +123,7 @@ class LangGraphToolProxy:
 
     def __call__(self, *args: Any, **kwargs: Any) -> Any:
         """Execute the tool with chaos injection."""
-        call = LangGraphToolCall(
+        call = LangChainToolCall(
             tool_name=self._tool_name,
             args=args,
             kwargs=kwargs,
@@ -161,11 +148,6 @@ class LangGraphToolProxy:
                         fault_type = injector.fault_type.value
                         fault_injected = fault_type
                         self._mttr.record_failure(self._tool_name, fault_type)
-
-                        if self.verbose:
-                            self._logger.info(
-                                f"[LangGraph] Injecting {fault_type} on {self._tool_name}"
-                            )
 
                         result, details = injector.inject(self._tool_name, context)
                         if result is not None:
@@ -206,11 +188,6 @@ class LangGraphToolProxy:
                     fault_type=fault_injected,
                 )
 
-                if self.verbose:
-                    self._logger.info(
-                        f"[LangGraph] {self._tool_name} completed in {call.duration_ms:.1f}ms"
-                    )
-
                 return result
 
             except Exception as e:
@@ -247,7 +224,7 @@ class LangGraphToolProxy:
 
         raise last_error  # type: ignore
 
-    def get_call_history(self) -> list[LangGraphToolCall]:
+    def get_call_history(self) -> list[LangChainToolCall]:
         """Get call history."""
         return self._call_history.copy()
 
@@ -264,164 +241,141 @@ class LangGraphToolProxy:
             injector.reset()
 
 
-class LangGraphNodeProxy:
+class ChaosCallbackHandler:
     """
-    Proxy for a LangGraph node function that enables chaos injection.
+    LangChain callback handler that records events and can inject chaos.
 
-    LangGraph nodes are functions that take state (TypedDict) and return
-    updated state. This proxy wraps those functions to inject delays,
-    failures, or other faults at the node execution level.
-
-    Node-level chaos is orthogonal to tool-level chaos: tool chaos affects
-    individual tool calls within a node, while node chaos affects the
-    entire node's execution.
+    This handler integrates with LangChain's callback system to track
+    LLM calls, tool usage, and chain execution.
     """
 
-    def __init__(
-        self,
-        func: Callable,
-        node_name: str,
-        chaos_level: float = 0.0,
-        verbose: bool = False,
-    ):
-        self._func = func
-        self._node_name = node_name
-        self._chaos_level = chaos_level
-        self.verbose = verbose
-        self._logger = get_logger()
+    def __init__(self, chaos_level: float = 0.0):
+        """
+        Initialize the callback handler.
 
-        self._injectors: list[BaseInjector] = []
-        self._event_history: list[LangGraphNodeEvent] = []
-        self._metrics = MetricsCollector()
+        Args:
+            chaos_level: Chaos level for injection (0.0-1.0)
+        """
+        self.chaos_level = chaos_level
+        self._events: list[CallbackEvent] = []
+        self._tool_calls = 0
+        self._llm_calls = 0
+        self._chain_runs = 0
 
-    @property
-    def node_name(self) -> str:
-        return self._node_name
-
-    def add_injector(self, injector: BaseInjector):
-        """Add a fault injector to this node proxy."""
-        self._injectors.append(injector)
-
-    def remove_injector(self, injector: BaseInjector):
-        """Remove a fault injector."""
-        self._injectors.remove(injector)
-
-    def clear_injectors(self):
-        """Remove all injectors."""
-        self._injectors.clear()
-
-    def __call__(self, state: Any) -> Any:
-        """Execute the node function with chaos injection."""
-        event = LangGraphNodeEvent(
-            node_name=self._node_name,
-            start_time=time.time(),
+    def on_llm_start(self, serialized: dict, prompts: list, **kwargs):
+        """Called when LLM starts."""
+        self._llm_calls += 1
+        self._events.append(
+            CallbackEvent(
+                event_type="llm_start",
+                timestamp=time.time(),
+                data={"serialized": serialized, "prompts": prompts},
+            )
         )
 
-        # Check injectors before execution
-        for injector in self._injectors:
-            if injector.should_inject(self._node_name):
-                fault_type = injector.fault_type.value
-                event.fault_injected = fault_type
-
-                if self.verbose:
-                    self._logger.info(
-                        f"[LangGraph] Injecting {fault_type} on node '{self._node_name}'"
-                    )
-
-                result, details = injector.inject(
-                    self._node_name,
-                    {"node_name": self._node_name, "state": state},
-                )
-
-                # Delay injections add latency but don't block execution —
-                # the delay already happened inside inject() via time.sleep
-                if injector.fault_type == FaultType.DELAY:
-                    continue
-
-                if result is not None:
-                    event.end_time = time.time()
-                    event.error = f"Fault injected: {fault_type}"
-                    self._event_history.append(event)
-                    self._metrics.record_operation(
-                        self._node_name,
-                        event.duration_ms,
-                        success=False,
-                        fault_type=fault_type,
-                    )
-                    raise RuntimeError(
-                        f"Chaos fault injected on node '{self._node_name}': {fault_type}"
-                    )
-
-        try:
-            result = self._func(state)
-            event.end_time = time.time()
-            self._event_history.append(event)
-            self._metrics.record_operation(
-                self._node_name,
-                event.duration_ms,
-                success=True,
+    def on_llm_end(self, response, **kwargs):
+        """Called when LLM ends."""
+        self._events.append(
+            CallbackEvent(
+                event_type="llm_end",
+                timestamp=time.time(),
+                data={"response": str(response)},
             )
+        )
 
-            if self.verbose:
-                self._logger.info(
-                    f"[LangGraph] Node '{self._node_name}' completed "
-                    f"in {event.duration_ms:.1f}ms"
-                )
-
-            return result
-        except Exception as e:
-            event.end_time = time.time()
-            event.error = str(e)
-            self._event_history.append(event)
-            self._metrics.record_operation(
-                self._node_name,
-                event.duration_ms,
-                success=False,
+    def on_tool_start(self, serialized: dict, input_str: str, **kwargs):
+        """Called when tool starts."""
+        self._tool_calls += 1
+        self._events.append(
+            CallbackEvent(
+                event_type="tool_start",
+                timestamp=time.time(),
+                data={"serialized": serialized, "input": input_str},
             )
-            raise
+        )
 
-    def get_event_history(self) -> list[LangGraphNodeEvent]:
-        """Get node event history."""
-        return self._event_history.copy()
+    def on_tool_end(self, output: str, **kwargs):
+        """Called when tool ends."""
+        self._events.append(
+            CallbackEvent(
+                event_type="tool_end",
+                timestamp=time.time(),
+                data={"output": output},
+            )
+        )
+
+    def on_chain_start(self, serialized: dict, inputs: dict, **kwargs):
+        """Called when chain starts."""
+        self._chain_runs += 1
+        self._events.append(
+            CallbackEvent(
+                event_type="chain_start",
+                timestamp=time.time(),
+                data={"serialized": serialized, "inputs": inputs},
+            )
+        )
+
+    def on_chain_end(self, outputs: dict, **kwargs):
+        """Called when chain ends."""
+        self._events.append(
+            CallbackEvent(
+                event_type="chain_end",
+                timestamp=time.time(),
+                data={"outputs": outputs},
+            )
+        )
+
+    def get_events(self) -> list[CallbackEvent]:
+        """Get all recorded events."""
+        return self._events.copy()
 
     def get_metrics(self) -> dict[str, Any]:
-        """Get node metrics summary."""
-        return self._metrics.get_summary()
+        """Get callback metrics."""
+        return {
+            "tool_calls": self._tool_calls,
+            "llm_calls": self._llm_calls,
+            "chain_runs": self._chain_runs,
+            "total_events": len(self._events),
+        }
 
     def reset(self):
-        """Reset node proxy state."""
-        self._event_history.clear()
-        self._metrics.reset()
+        """Reset callback state."""
+        self._events.clear()
+        self._tool_calls = 0
+        self._llm_calls = 0
+        self._chain_runs = 0
 
 
-class LangGraphWrapper:
+class LangChainAgentWrapper:
     """
-    Wrapper for LangGraph CompiledGraph that enables chaos engineering.
+    Wrapper for LangChain AgentExecutor that enables chaos engineering.
 
-    This wrapper intercepts tool calls and optionally node executions
-    from the compiled graph and injects faults according to the
-    configured chaos level.
+    This wrapper intercepts tool calls from the agent and injects faults
+    according to the configured chaos level.
     """
 
     def __init__(
         self,
-        compiled_graph: Any,
-        tools: Optional[list[Any]] = None,
+        agent_executor: Any,
         chaos_level: float = 0.0,
         max_retries: int = 3,
         retry_delay: float = 0.1,
-        verbose: bool = False,
     ):
-        self._compiled_graph = compiled_graph
-        self._explicit_tools = tools
+        """
+        Initialize the LangChain agent wrapper.
+
+        Args:
+            agent_executor: LangChain AgentExecutor object
+            chaos_level: Initial chaos level (0.0-1.0)
+            max_retries: Default max retries for tool calls
+            retry_delay: Default retry delay in seconds
+        """
+        self._agent_executor = agent_executor
         self._chaos_level = chaos_level
         self._max_retries = max_retries
         self._retry_delay = retry_delay
-        self.verbose = verbose
-        self._logger = get_logger()
 
-        self._tool_proxies: dict[str, LangGraphToolProxy] = {}
-        self._node_proxies: dict[str, LangGraphNodeProxy] = {}
+        self._tool_proxies: dict[str, LangChainToolProxy] = {}
         self._injectors: list[BaseInjector] = []
         self._metrics = MetricsCollector()
         self._mttr = MTTRCalculator()
@@ -434,9 +388,9 @@ class LangGraphWrapper:
         self._wrap_tools()
 
     @property
-    def compiled_graph(self) -> Any:
-        """Get the wrapped compiled graph."""
-        return self._compiled_graph
+    def agent_executor(self) -> Any:
+        """Get the wrapped agent executor."""
+        return self._agent_executor
 
     @property
     def chaos_level(self) -> float:
@@ -444,90 +398,24 @@ class LangGraphWrapper:
         return self._chaos_level
 
     def _wrap_tools(self):
-        """Discover and wrap all tools from the compiled graph.
+        """Wrap all tools from the agent."""
+        tools = getattr(self._agent_executor, "tools", [])
 
-        LangGraph tools can be discovered from:
-        1. Explicitly passed tools list
-        2. ToolNode instances in the graph's nodes
-        3. The graph's tools attribute
-        """
-        tools_to_wrap: list[Any] = []
-
-        # 1. Use explicitly provided tools if any
-        if self._explicit_tools:
-            tools_to_wrap.extend(self._explicit_tools)
-
-        # 2. Discover from graph nodes — look for ToolNode instances
-        nodes = getattr(self._compiled_graph, "nodes", {})
-        for node_name, node_func in nodes.items():
-            # Check if node is a ToolNode (has .tools attribute)
-            node_tools = getattr(node_func, "tools", None)
-            if node_tools and isinstance(node_tools, (list, tuple)):
-                tools_to_wrap.extend(node_tools)
-            # Also check tools_by_name dict
-            tools_by_name = getattr(node_func, "tools_by_name", None)
-            if tools_by_name and isinstance(tools_by_name, dict):
-                tools_to_wrap.extend(tools_by_name.values())
-
-        # 3. Fallback: check compiled graph's tools
-        graph_tools = getattr(self._compiled_graph, "tools", None)
-        if graph_tools and isinstance(graph_tools, (list, tuple)):
-            tools_to_wrap.extend(graph_tools)
-
-        # Wrap each discovered tool
-        for tool in tools_to_wrap:
+        for tool in tools:
             tool_name = getattr(tool, "name", str(tool))
 
             if tool_name not in self._tool_proxies:
-                proxy = LangGraphToolProxy(
+                proxy = LangChainToolProxy(
                     tool,
                     chaos_level=self._chaos_level,
                     max_retries=self._max_retries,
                     retry_delay=self._retry_delay,
-                    verbose=self.verbose,
                 )
                 self._tool_proxies[tool_name] = proxy
 
                 # Replace the tool's func with our proxy
                 if hasattr(tool, "func"):
                     tool.func = proxy
-
-    def wrap_node(
-        self,
-        node_name: str,
-        injectors: Optional[list[BaseInjector]] = None,
-    ) -> Optional[LangGraphNodeProxy]:
-        """Wrap a specific graph node with chaos injection.
-
-        Node-level wrapping is opt-in because not all nodes should be
-        chaos-injected (e.g., the LLM router node should typically
-        remain stable).
-
-        Args:
-            node_name: The name of the node in the graph
-            injectors: Optional list of injectors for this node
-
-        Returns:
-            The LangGraphNodeProxy if the node was found, None otherwise
-        """
-        nodes = getattr(self._compiled_graph, "nodes", {})
-        if node_name not in nodes:
-            return None
-
-        original_func = nodes[node_name]
-        proxy = LangGraphNodeProxy(
-            func=original_func,
-            node_name=node_name,
-            chaos_level=self._chaos_level,
-            verbose=self.verbose,
-        )
-        if injectors:
-            for inj in injectors:
-                proxy.add_injector(inj)
-
-        self._node_proxies[node_name] = proxy
-        nodes[node_name] = proxy
-        return proxy
 
     def configure_chaos(
         self,
@@ -586,132 +474,113 @@ class LangGraphWrapper:
             for injector in self._injectors:
                 proxy.add_injector(injector)
 
-    def add_injector(
-        self,
-        injector: BaseInjector,
-        tools: Optional[list[str]] = None,
-        nodes: Optional[list[str]] = None,
-    ):
+    def add_injector(self, injector: BaseInjector, tools: Optional[list[str]] = None):
         """
-        Add a custom injector to specific tools, nodes, or all tools.
+        Add a custom injector to specific tools or all tools.
 
         Args:
             injector: The fault injector to add
             tools: List of tool names to target, or None for all tools
-            nodes: List of node names to target (must be explicit)
         """
-        # Apply to tools (default: all tools)
-        tool_targets = tools or list(self._tool_proxies.keys())
-        for name in tool_targets:
+        targets = tools or list(self._tool_proxies.keys())
+        for name in targets:
             if name in self._tool_proxies:
                 self._tool_proxies[name].add_injector(injector)
 
-        # Apply to nodes (must be explicit)
-        if nodes:
-            for name in nodes:
-                if name in self._node_proxies:
-                    self._node_proxies[name].add_injector(injector)
-
-    def get_wrapped_tools(self) -> dict[str, LangGraphToolProxy]:
+    def get_wrapped_tools(self) -> dict[str, LangChainToolProxy]:
         """Get dictionary of wrapped tools."""
         return self._tool_proxies.copy()
 
-    def get_wrapped_nodes(self) -> dict[str, LangGraphNodeProxy]:
-        """Get dictionary of wrapped nodes."""
-        return self._node_proxies.copy()
-
     def invoke(self, input_data: dict, config: Optional[dict] = None, **kwargs) -> Any:
         """
-        Invoke the graph with chaos injection.
+        Invoke the agent with chaos injection.
 
         Args:
-            input_data: Input state dictionary for the graph
+            input_data: Input dictionary for the agent
             config: Optional config dictionary
             **kwargs: Additional keyword arguments
 
         Returns:
-            The graph's output state
+            The agent's output
         """
         self._invoke_count += 1
 
         if config is not None:
             kwargs["config"] = config
 
-        return self._compiled_graph.invoke(input_data, **kwargs)
+        return self._agent_executor.invoke(input_data, **kwargs)
 
     async def ainvoke(self, input_data: dict, config: Optional[dict] = None, **kwargs) -> Any:
         """
-        Async invoke the graph with chaos injection.
+        Async invoke the agent with chaos injection.
 
         Args:
-            input_data: Input state dictionary for the graph
+            input_data: Input dictionary for the agent
             config: Optional config dictionary
             **kwargs: Additional keyword arguments
 
         Returns:
-            The graph's output state
+            The agent's output
         """
         self._invoke_count += 1
 
         if config is not None:
             kwargs["config"] = config
 
-        return await self._compiled_graph.ainvoke(input_data, **kwargs)
+        return await self._agent_executor.ainvoke(input_data, **kwargs)
 
-    def stream(
-        self, input_data: dict, config: Optional[dict] = None, **kwargs
-    ) -> Iterator[Any]:
+    def stream(self, input_data: dict, config: Optional[dict] = None, **kwargs) -> Iterator[Any]:
         """
-        Stream responses from the graph (node-by-node).
+        Stream responses from the agent.
 
         Args:
-            input_data: Input state dictionary
+            input_data: Input dictionary for the agent
             config: Optional config dictionary
             **kwargs: Additional keyword arguments
 
         Yields:
-            Node output chunks
+            Response chunks
         """
         self._invoke_count += 1
 
         if config is not None:
             kwargs["config"] = config
 
-        yield from self._compiled_graph.stream(input_data, **kwargs)
+        yield from self._agent_executor.stream(input_data, **kwargs)
 
     async def astream(
         self, input_data: dict, config: Optional[dict] = None, **kwargs
     ) -> AsyncIterator[Any]:
         """
-        Async stream responses from the graph.
+        Async stream responses from the agent.
 
         Args:
-            input_data: Input state dictionary
+            input_data: Input dictionary for the agent
             config: Optional config dictionary
             **kwargs: Additional keyword arguments
 
         Yields:
-            Node output chunks
+            Response chunks
         """
         self._invoke_count += 1
 
         if config is not None:
             kwargs["config"] = config
 
-        async for chunk in self._compiled_graph.astream(input_data, **kwargs):
+        async for chunk in self._agent_executor.astream(input_data, **kwargs):
             yield chunk
 
     def batch(self, inputs: list[dict], config: Optional[dict] = None, **kwargs) -> list[Any]:
         """
-        Batch invoke the graph.
+        Batch invoke the agent.
 
         Args:
-            inputs: List of input state dictionaries
+            inputs: List of input dictionaries
             config: Optional config dictionary
             **kwargs: Additional keyword arguments
 
         Returns:
-            List of graph output states
+            List of agent outputs
         """
         self._invoke_count += len(inputs)
 
@@ -720,21 +589,21 @@ class LangGraphWrapper:
 
         from typing import cast
 
-        return cast(list[Any], self._compiled_graph.batch(inputs, **kwargs))
+        return cast(list[Any], self._agent_executor.batch(inputs, **kwargs))
 
     async def abatch(
         self, inputs: list[dict], config: Optional[dict] = None, **kwargs
     ) -> list[Any]:
         """
-        Async batch invoke the graph.
+        Async batch invoke the agent.
 
         Args:
-            inputs: List of input state dictionaries
+            inputs: List of input dictionaries
             config: Optional config dictionary
             **kwargs: Additional keyword arguments
 
         Returns:
-            List of graph output states
+            List of agent outputs
         """
         self._invoke_count += len(inputs)
 
@@ -743,15 +612,7 @@ class LangGraphWrapper:
 
         from typing import cast
 
-        return cast(list[Any], await self._compiled_graph.abatch(inputs, **kwargs))
-
-    def get_state(self, config: Optional[dict] = None) -> Any:
-        """Get the current graph state."""
-        return self._compiled_graph.get_state(config or {})
-
-    def update_state(self, config: dict, values: dict, **kwargs) -> Any:
-        """Update the graph state."""
-        return self._compiled_graph.update_state(config, values, **kwargs)
+        return cast(list[Any], await self._agent_executor.abatch(inputs, **kwargs))
 
     def get_metrics(self) -> dict[str, Any]:
         """Get comprehensive metrics."""
@@ -759,14 +620,9 @@ class LangGraphWrapper:
         for name, proxy in self._tool_proxies.items():
             tool_metrics[name] = proxy.get_metrics()
 
-        node_metrics = {}
-        for name, proxy in self._node_proxies.items():
-            node_metrics[name] = proxy.get_metrics()
-
         return {
             "invoke_count": self._invoke_count,
             "tools": tool_metrics,
-            "nodes": node_metrics,
             "aggregate": self._metrics.get_summary(),
         }
 
@@ -785,8 +641,6 @@ class LangGraphWrapper:
         """Reset wrapper state."""
         self._invoke_count = 0
         for proxy in self._tool_proxies.values():
-            proxy.reset()
-        for proxy in self._node_proxies.values():
             proxy.reset()
         self._metrics.reset()
         self._mttr.reset()
@@ -824,3 +678,69 @@ class LangGraphWrapper:
     def get_experiment_results(self) -> list[ExperimentResult]:
         """Get all experiment results."""
         return self._experiment_results.copy()
+
+
+class LangChainChainWrapper:
+    """
+    Wrapper for LangChain chains (LCEL) that enables chaos engineering.
+
+    This wrapper works with any Runnable chain and can inject faults
+    during chain execution.
+    """
+
+    def __init__(
+        self,
+        chain: Any,
+        chaos_level: float = 0.0,
+    ):
+        """
+        Initialize the chain wrapper.
+
+        Args:
+            chain: LangChain chain/Runnable object
+            chaos_level: Initial chaos level (0.0-1.0)
+        """
+        self._chain = chain
+        self._chaos_level = chaos_level
+        self._invoke_count = 0
+        self._metrics = MetricsCollector()
+        self._injectors: list[BaseInjector] = []
+
+    @property
+    def chain(self) -> Any:
+        """Get the wrapped chain."""
+        return self._chain
+
+    @property
+    def chaos_level(self) -> float:
+        """Get current chaos level."""
+        return self._chaos_level
+
+    def invoke(self, input_data: dict, **kwargs) -> Any:
+        """Invoke the chain."""
+        self._invoke_count += 1
+        return self._chain.invoke(input_data, **kwargs)
+
+    def stream(self, input_data: dict, **kwargs) -> Iterator[Any]:
+        """Stream from the chain."""
+        self._invoke_count += 1
+        yield from self._chain.stream(input_data, **kwargs)
+
+    def batch(self, inputs: list[dict], **kwargs) -> list[Any]:
+        """Batch invoke the chain."""
+        self._invoke_count += len(inputs)
+        from typing import cast
+
+        return cast(list[Any], self._chain.batch(inputs, **kwargs))
+
+    def get_metrics(self) -> dict[str, Any]:
+        """Get metrics."""
+        return {
+            "invoke_count": self._invoke_count,
+            "aggregate": self._metrics.get_summary(),
+        }
+
+    def reset(self):
+        """Reset wrapper state."""
+        self._invoke_count = 0
+        self._metrics.reset()

@@ -10,7 +10,7 @@ We release patches for security vulnerabilities in the following versions:
 
 ## Reporting a Vulnerability
 
-We take the security of BalaganAgent seriously. If you discover a security vulnerability, please follow these steps:
+We take the security of SentinelAI seriously. If you discover a security vulnerability, please follow these steps:
 
 ### Private Disclosure Process
 
@@ -19,7 +19,7 @@ We take the security of BalaganAgent seriously. If you discover a security vulne
 Instead, please report security vulnerabilities by:
 
 1. **Email**: Send details to ariel.shadkhan@gmail.com with the subject line "SECURITY: [Brief Description]"
-2. **GitHub Security Advisory**: Use the [private vulnerability reporting feature](https://github.com/arielshad/balagan-agent/security/advisories/new)
+2. **GitHub Security Advisory**: Use the [private vulnerability reporting feature](https://github.com/arielshad/sentinel-ai/security/advisories/new)
 
 ### What to Include
 
@@ -57,7 +57,7 @@ Security updates will be:
 
 ## Security Best Practices
 
-When using BalaganAgent in production:
+When using SentinelAI in production:
 
 1. **API Keys**: Never commit API keys or credentials to version control
 2. **Dependency Updates**: Regularly update dependencies to get security patches
@@ -70,7 +70,7 @@ When using BalaganAgent in production:
 
 ### Chaos Injection Risks
 
-BalaganAgent is designed to inject failures. Please be aware:
+SentinelAI is designed to inject failures. Please be aware:
 
 - **Production Use**: Never run chaos experiments directly in production without proper safeguards
 - **API Abuse**: Tool failure injection could trigger rate limits or abuse detection on external APIs
@@ -93,6 +93,6 @@ Currently, no security vulnerabilities have been reported or fixed.
 
 ## Questions?
 
-For general security questions or concerns, feel free to open a public discussion in [GitHub Discussions](https://github.com/arielshad/balagan-agent/discussions) or reach out via email.
+For general security questions or concerns, feel free to open a public discussion in [GitHub Discussions](https://github.com/arielshad/sentinel-ai/discussions) or reach out via email.
 
-Thank you for helping keep BalaganAgent and its users safe!
+Thank you for helping keep SentinelAI and its users safe!

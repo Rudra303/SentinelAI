@@ -118,7 +118,7 @@ class TestLangChainE2EWorkflow:
 
     def test_simple_agent_workflow_no_chaos(self):
         """Test a simple agent workflow without chaos injection."""
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         # Create mock tools
         def search_func(query: str) -> str:
@@ -148,9 +148,9 @@ class TestLangChainE2EWorkflow:
 
     def test_agent_workflow_with_tool_failure_injection(self):
         """Test agent workflow with tool failure chaos injection."""
-        from balaganagent.injectors import ToolFailureInjector
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.injectors import ToolFailureInjector
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         call_count = 0
 
@@ -173,9 +173,9 @@ class TestLangChainE2EWorkflow:
 
     def test_agent_workflow_with_delays(self):
         """Test agent workflow with artificial delays."""
-        from balaganagent.injectors import DelayInjector
-        from balaganagent.injectors.delay import DelayConfig
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.injectors import DelayInjector
+        from sentinelai.injectors.delay import DelayConfig
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         def fast_tool(x: str) -> str:
             return f"fast: {x}"
@@ -194,7 +194,7 @@ class TestLangChainE2EWorkflow:
 
     def test_agent_workflow_with_experiment_tracking(self):
         """Test agent workflow within an experiment context."""
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         agent = MockAgentExecutor(tools=[])
         wrapper = LangChainAgentWrapper(agent, chaos_level=0.0)
@@ -209,7 +209,7 @@ class TestLangChainE2EWorkflow:
 
     def test_multi_tool_agent_workflow(self):
         """Test agent with multiple tools."""
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         def search_web(query: str) -> dict:
             return {"source": "web", "query": query}
@@ -238,7 +238,7 @@ class TestLangChainE2EWorkflow:
 
     def test_chaos_level_configuration(self):
         """Test configuring different chaos levels."""
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         agent = MockAgentExecutor(tools=[])
         wrapper = LangChainAgentWrapper(agent)
@@ -253,7 +253,7 @@ class TestLangChainE2EWorkflow:
 
     def test_metrics_collection_e2e(self):
         """Test comprehensive metrics collection during workflow."""
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         def tracked_tool(x: str) -> str:
             return x
@@ -272,7 +272,7 @@ class TestLangChainE2EWorkflow:
 
     def test_reset_workflow_state(self):
         """Test resetting workflow state between experiments."""
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         agent = MockAgentExecutor(tools=[])
         wrapper = LangChainAgentWrapper(agent, chaos_level=0.0)
@@ -296,7 +296,7 @@ class TestLangChainE2EWorkflow:
 
     def test_streaming_workflow(self):
         """Test streaming response workflow."""
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         agent = MockAgentExecutor(tools=[])
         wrapper = LangChainAgentWrapper(agent, chaos_level=0.0)
@@ -306,7 +306,7 @@ class TestLangChainE2EWorkflow:
 
     def test_batch_workflow(self):
         """Test batch invocation workflow."""
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         agent = MockAgentExecutor(tools=[])
         wrapper = LangChainAgentWrapper(agent, chaos_level=0.0)
@@ -323,7 +323,7 @@ class TestLangChainChainE2E:
 
     def test_simple_chain_workflow(self):
         """Test simple chain workflow."""
-        from balaganagent.wrappers.langchain import LangChainChainWrapper
+        from sentinelai.wrappers.langchain import LangChainChainWrapper
 
         def transform(x):
             return {"result": f"transformed: {x.get('input', '')}"}
@@ -336,7 +336,7 @@ class TestLangChainChainE2E:
 
     def test_chain_streaming(self):
         """Test chain streaming."""
-        from balaganagent.wrappers.langchain import LangChainChainWrapper
+        from sentinelai.wrappers.langchain import LangChainChainWrapper
 
         chain = MockChain()
         wrapper = LangChainChainWrapper(chain, chaos_level=0.0)
@@ -346,7 +346,7 @@ class TestLangChainChainE2E:
 
     def test_chain_batch(self):
         """Test chain batch."""
-        from balaganagent.wrappers.langchain import LangChainChainWrapper
+        from sentinelai.wrappers.langchain import LangChainChainWrapper
 
         chain = MockChain()
         wrapper = LangChainChainWrapper(chain, chaos_level=0.0)
@@ -361,7 +361,7 @@ class TestLangChainAsyncE2E:
     @pytest.mark.asyncio
     async def test_async_agent_workflow(self):
         """Test async agent workflow."""
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         agent = MockAgentExecutor(tools=[])
         wrapper = LangChainAgentWrapper(agent, chaos_level=0.0)
@@ -372,7 +372,7 @@ class TestLangChainAsyncE2E:
     @pytest.mark.asyncio
     async def test_async_streaming(self):
         """Test async streaming."""
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         agent = MockAgentExecutor(tools=[])
         wrapper = LangChainAgentWrapper(agent, chaos_level=0.0)
@@ -386,7 +386,7 @@ class TestLangChainAsyncE2E:
     @pytest.mark.asyncio
     async def test_async_batch(self):
         """Test async batch."""
-        from balaganagent.wrappers.langchain import LangChainAgentWrapper
+        from sentinelai.wrappers.langchain import LangChainAgentWrapper
 
         agent = MockAgentExecutor(tools=[])
         wrapper = LangChainAgentWrapper(agent, chaos_level=0.0)
@@ -400,7 +400,7 @@ class TestLangChainCallbackE2E:
 
     def test_callback_handler_workflow(self):
         """Test callback handler in workflow."""
-        from balaganagent.wrappers.langchain import ChaosCallbackHandler
+        from sentinelai.wrappers.langchain import ChaosCallbackHandler
 
         handler = ChaosCallbackHandler(chaos_level=0.0)
 
@@ -422,7 +422,7 @@ class TestLangChainCallbackE2E:
 
     def test_callback_reset(self):
         """Test callback handler reset."""
-        from balaganagent.wrappers.langchain import ChaosCallbackHandler
+        from sentinelai.wrappers.langchain import ChaosCallbackHandler
 
         handler = ChaosCallbackHandler(chaos_level=0.0)
         handler.on_llm_start({}, [])
@@ -442,7 +442,7 @@ class TestLangChainErrorHandling:
 
     def test_tool_proxy_exhausts_retries(self):
         """Test behavior when tool exhausts all retries."""
-        from balaganagent.wrappers.langchain import LangChainToolProxy
+        from sentinelai.wrappers.langchain import LangChainToolProxy
 
         def always_fails(*args):
             raise RuntimeError("Permanent failure")
@@ -460,7 +460,7 @@ class TestLangChainErrorHandling:
 
     def test_tool_proxy_recovers_from_transient_failure(self):
         """Test tool proxy recovers from transient failures."""
-        from balaganagent.wrappers.langchain import LangChainToolProxy
+        from sentinelai.wrappers.langchain import LangChainToolProxy
 
         call_count = 0
 

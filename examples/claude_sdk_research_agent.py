@@ -1,4 +1,4 @@
-"""Research agent built with Claude Agent SDK and BalaganAgent chaos framework.
+"""Research agent built with Claude Agent SDK and SentinelAI chaos framework.
 
 This example demonstrates a research workflow with optional chaos injection:
 1. Search web for information on a topic
@@ -22,7 +22,7 @@ Usage:
     python claude_sdk_research_agent.py --topic "AI safety" --mode production
 
 Dependencies:
-    - balagan-agent (for chaos wrapper)
+    - sentinel-ai (for chaos wrapper)
     - claude-agent-sdk (for production mode)
     - python-dotenv (for environment variables)
 """
@@ -39,7 +39,7 @@ from typing import Any, Optional
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from balaganagent.wrappers.claude_sdk import ClaudeAgentSDKWrapper
+from sentinelai.wrappers.claude_sdk import ClaudeAgentSDKWrapper
 from examples.claude_sdk_research_tools import get_research_tools
 
 

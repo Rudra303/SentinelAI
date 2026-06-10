@@ -15,7 +15,7 @@ class TestCrewAIWrapper:
 
     def test_wrapper_creation(self):
         """Test that wrapper can be created with mock CrewAI components."""
-        from balaganagent.wrappers.crewai import CrewAIWrapper
+        from sentinelai.wrappers.crewai import CrewAIWrapper
 
         # Create mock crew
         mock_crew = MagicMock()
@@ -28,7 +28,7 @@ class TestCrewAIWrapper:
 
     def test_wrapper_with_chaos_level(self):
         """Test wrapper can be configured with chaos level."""
-        from balaganagent.wrappers.crewai import CrewAIWrapper
+        from sentinelai.wrappers.crewai import CrewAIWrapper
 
         mock_crew = MagicMock()
         mock_crew.agents = []
@@ -39,7 +39,7 @@ class TestCrewAIWrapper:
 
     def test_wrap_agent_tools(self):
         """Test that agent tools are properly wrapped."""
-        from balaganagent.wrappers.crewai import CrewAIWrapper
+        from sentinelai.wrappers.crewai import CrewAIWrapper
 
         # Create mock agent with tools
         mock_tool1 = MagicMock()
@@ -66,7 +66,7 @@ class TestCrewAIWrapper:
 
     def test_kickoff_with_chaos(self):
         """Test that kickoff runs with chaos injection."""
-        from balaganagent.wrappers.crewai import CrewAIWrapper
+        from sentinelai.wrappers.crewai import CrewAIWrapper
 
         mock_crew = MagicMock()
         mock_crew.agents = []
@@ -81,7 +81,7 @@ class TestCrewAIWrapper:
 
     def test_kickoff_with_inputs(self):
         """Test kickoff with input parameters."""
-        from balaganagent.wrappers.crewai import CrewAIWrapper
+        from sentinelai.wrappers.crewai import CrewAIWrapper
 
         mock_crew = MagicMock()
         mock_crew.agents = []
@@ -95,7 +95,7 @@ class TestCrewAIWrapper:
 
     def test_get_metrics(self):
         """Test that metrics are collected properly."""
-        from balaganagent.wrappers.crewai import CrewAIWrapper
+        from sentinelai.wrappers.crewai import CrewAIWrapper
 
         mock_crew = MagicMock()
         mock_crew.agents = []
@@ -111,9 +111,9 @@ class TestCrewAIWrapper:
 
     def test_chaos_injection_on_tools(self):
         """Test that chaos can be injected into tool calls."""
-        from balaganagent.injectors import ToolFailureInjector
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
-        from balaganagent.wrappers.crewai import CrewAIWrapper
+        from sentinelai.injectors import ToolFailureInjector
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.wrappers.crewai import CrewAIWrapper
 
         mock_tool = MagicMock()
         mock_tool.name = "flaky_tool"
@@ -139,7 +139,7 @@ class TestCrewAIWrapper:
 
     def test_reset_wrapper(self):
         """Test wrapper state reset."""
-        from balaganagent.wrappers.crewai import CrewAIWrapper
+        from sentinelai.wrappers.crewai import CrewAIWrapper
 
         mock_crew = MagicMock()
         mock_crew.agents = []
@@ -158,7 +158,7 @@ class TestCrewAIWrapper:
 
     def test_experiment_context(self):
         """Test running crew within an experiment context."""
-        from balaganagent.wrappers.crewai import CrewAIWrapper
+        from sentinelai.wrappers.crewai import CrewAIWrapper
 
         mock_crew = MagicMock()
         mock_crew.agents = []
@@ -176,7 +176,7 @@ class TestCrewAIWrapper:
 
     def test_multiple_agents_tools(self):
         """Test handling multiple agents with different tools."""
-        from balaganagent.wrappers.crewai import CrewAIWrapper
+        from sentinelai.wrappers.crewai import CrewAIWrapper
 
         # Agent 1 tools
         tool1 = MagicMock()
@@ -208,7 +208,7 @@ class TestCrewAIWrapper:
 
     def test_configure_chaos_all_options(self):
         """Test configuring chaos with all options."""
-        from balaganagent.wrappers.crewai import CrewAIWrapper
+        from sentinelai.wrappers.crewai import CrewAIWrapper
 
         mock_crew = MagicMock()
         mock_crew.agents = []
@@ -232,7 +232,7 @@ class TestCrewAIToolProxy:
 
     def test_tool_proxy_creation(self):
         """Test tool proxy is created correctly."""
-        from balaganagent.wrappers.crewai import CrewAIToolProxy
+        from sentinelai.wrappers.crewai import CrewAIToolProxy
 
         mock_tool = MagicMock()
         mock_tool.name = "test_tool"
@@ -243,7 +243,7 @@ class TestCrewAIToolProxy:
 
     def test_tool_proxy_call(self):
         """Test tool proxy calls the underlying tool."""
-        from balaganagent.wrappers.crewai import CrewAIToolProxy
+        from sentinelai.wrappers.crewai import CrewAIToolProxy
 
         mock_tool = MagicMock()
         mock_tool.name = "test_tool"
@@ -257,7 +257,7 @@ class TestCrewAIToolProxy:
 
     def test_tool_proxy_records_call_history(self):
         """Test tool proxy records call history."""
-        from balaganagent.wrappers.crewai import CrewAIToolProxy
+        from sentinelai.wrappers.crewai import CrewAIToolProxy
 
         mock_tool = MagicMock()
         mock_tool.name = "tracked_tool"
@@ -274,7 +274,7 @@ class TestCrewAIToolProxy:
 
     def test_tool_proxy_retry_on_failure(self):
         """Test tool proxy retries on transient failures."""
-        from balaganagent.wrappers.crewai import CrewAIToolProxy
+        from sentinelai.wrappers.crewai import CrewAIToolProxy
 
         mock_tool = MagicMock()
         mock_tool.name = "flaky_tool"

@@ -2,7 +2,7 @@
 
 The Claude Agent SDK uses ``query()`` / ``ClaudeSDKClient`` for the agentic
 loop and ``@tool`` + ``create_sdk_mcp_server()`` for custom tools.
-BalaganAgent wraps the **tool functions** before they are registered with the
+SentinelAI wraps the **tool functions** before they are registered with the
 SDK, so every invocation flows through the chaos engine.
 """
 
@@ -10,7 +10,7 @@ from unittest.mock import MagicMock
 
 import pytest
 
-from balaganagent.wrappers.claude_sdk import (
+from sentinelai.wrappers.claude_sdk import (
     ClaudeAgentSDKToolCall,
     ClaudeAgentSDKToolProxy,
     ClaudeAgentSDKWrapper,
@@ -120,8 +120,8 @@ class TestClaudeAgentSDKToolProxy:
         assert len(proxy._injectors) == 0
 
     def test_proxy_with_injector_that_fires(self):
-        from balaganagent.injectors import ToolFailureInjector
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.injectors import ToolFailureInjector
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
 
         func = MagicMock(return_value="ok")
         proxy = ClaudeAgentSDKToolProxy(func, name="t", chaos_level=1.0)
@@ -221,8 +221,8 @@ class TestClaudeAgentSDKWrapper:
         assert wrapper.chaos_level == 0.8
 
     def test_add_injector_to_specific_tools(self):
-        from balaganagent.injectors import ToolFailureInjector
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.injectors import ToolFailureInjector
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
 
         def t1():
             pass
@@ -277,11 +277,11 @@ class TestClaudeAgentSDKWrapper:
 
 
 class TestClaudeAgentSDKChaosExample:
-    """Tests that demonstrate chaos-testing Claude Agent SDK tools with balagan."""
+    """Tests that demonstrate chaos-testing Claude Agent SDK tools with sentinel."""
 
     def test_tool_under_failure_injection(self):
-        from balaganagent.injectors import ToolFailureInjector
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.injectors import ToolFailureInjector
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
 
         def search_web(args):
             return {"content": [{"type": "text", "text": f"Results for {args['query']}"}]}

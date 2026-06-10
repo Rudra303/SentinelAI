@@ -23,9 +23,9 @@ from typing import Any
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from balaganagent.injectors import ToolFailureInjector
-from balaganagent.injectors.tool_failure import ToolFailureConfig
-from balaganagent.wrappers.claude_sdk import ClaudeAgentSDKWrapper
+from sentinelai.injectors import ToolFailureInjector
+from sentinelai.injectors.tool_failure import ToolFailureConfig
+from sentinelai.wrappers.claude_sdk import ClaudeAgentSDKWrapper
 from examples.claude_sdk_research_tools import get_research_tools
 
 

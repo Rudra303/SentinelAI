@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-LangGraph chaos engineering example for BalaganAgent.
+LangGraph chaos engineering example for SentinelAI.
 
 This example demonstrates how to:
 1. Create a LangGraph state graph with tools (mocked)
@@ -9,10 +9,10 @@ This example demonstrates how to:
 4. Inject chaos at the node level
 5. Analyze reliability metrics
 
-Requires: pip install balagan-agent[langgraph]
+Requires: pip install sentinel-ai[langgraph]
 """
 
-from balaganagent.wrappers.langgraph import LangGraphWrapper
+from sentinelai.wrappers.langgraph import LangGraphWrapper
 
 
 # --- Mock objects for demonstration (replace with real LangGraph in production) ---
@@ -103,8 +103,8 @@ def example_node_level_chaos():
     print("Example 2: Node-Level Chaos Injection")
     print("=" * 60)
 
-    from balaganagent.injectors import DelayInjector
-    from balaganagent.injectors.delay import DelayConfig
+    from sentinelai.injectors import DelayInjector
+    from sentinelai.injectors.delay import DelayConfig
 
     def retriever_node(state):
         return {"messages": state.get("messages", []) + ["Retrieved documents"]}
@@ -164,7 +164,7 @@ def example_experiment_tracking():
 def main():
     """Run all LangGraph examples."""
     print()
-    print("BalaganAgent - LangGraph Chaos Engineering Examples")
+    print("SentinelAI - LangGraph Chaos Engineering Examples")
     print("===================================================")
     print()
 

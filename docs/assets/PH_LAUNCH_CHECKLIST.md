@@ -1,10 +1,10 @@
-# Product Hunt Launch Checklist — BalaganAgent
+# Product Hunt Launch Checklist — SentinelAI
 
 ## Product Hunt Listing
 
-- [ ] **URL**: `https://arielshad.github.io/balagan-agent/`
+- [ ] **URL**: `https://arielshad.github.io/sentinel-ai/`
 - [ ] **Tagline** (60 chars max): "Chaos engineering for AI agents"
-- [ ] **One-liner**: "BalaganAgent injects failures into tool calls, latency, context, and budgets — then scores recovery (MTTR, reliability) and generates reports."
+- [ ] **One-liner**: "SentinelAI injects failures into tool calls, latency, context, and budgets — then scores recovery (MTTR, reliability) and generates reports."
 - [ ] **Topics**: Developer Tools, Artificial Intelligence, Open Source, Testing
 
 ## Assets to Create
@@ -21,17 +21,17 @@
 6. **Stress test results** — CLI output showing pass rates at different chaos levels
 
 ### Demo Video (optional, <60s)
-- Install → `balaganagent demo --chaos-level 0.5` → show report output
+- Install → `sentinelai demo --chaos-level 0.5` → show report output
 - Or: 3-line CrewAI integration → run → show metrics
 
 ## Maker Comment (post immediately on launch)
 
 ```
-Hey PH! I'm Ariel, the creator of BalaganAgent.
+Hey PH! I'm Ariel, the creator of SentinelAI.
 
 I built this because I kept seeing AI agents demo perfectly but break in production — tool calls timeout, APIs return garbage, context gets corrupted, and nobody knows until users complain.
 
-BalaganAgent brings chaos engineering (think Chaos Monkey, but for agents) to the AI world:
+SentinelAI brings chaos engineering (think Chaos Monkey, but for agents) to the AI world:
 
 • 5 fault injectors: tool failures, delays, hallucinations, context corruption, budget exhaustion
 • Metrics: MTTR + SRE-grade reliability scoring
@@ -40,8 +40,8 @@ BalaganAgent brings chaos engineering (think Chaos Monkey, but for agents) to th
 
 It's free, open source (Apache 2.0), and you can try it right now:
 
-    pip install balagan-agent
-    balaganagent demo --chaos-level 0.5
+    pip install sentinel-ai
+    sentinelai demo --chaos-level 0.5
 
 Would love your feedback — what failure modes matter most to you?
 ```
@@ -52,13 +52,13 @@ Would love your feedback — what failure modes matter most to you?
 A: No — it's for dev/CI. You inject failures during development to find agent weaknesses before they reach production.
 
 **Q: Does it cost money?**
-A: BalaganAgent is free and open source. Your LLM API costs still apply during experiments.
+A: SentinelAI is free and open source. Your LLM API costs still apply during experiments.
 
 **Q: Which frameworks does it support?**
 A: CrewAI, AutoGen, LangChain, Claude Agent SDK, plus any custom Python agent.
 
 **Q: How is this different from Chaos Monkey/Gremlin?**
-A: Those are infrastructure-focused. BalaganAgent understands AI agents — it injects semantic failures (hallucinations, context corruption) and measures agent-specific metrics (MTTR, recovery quality).
+A: Those are infrastructure-focused. SentinelAI understands AI agents — it injects semantic failures (hallucinations, context corruption) and measures agent-specific metrics (MTTR, recovery quality).
 
 ## Launch Timeline
 
@@ -90,4 +90,4 @@ A: Those are infrastructure-focused. BalaganAgent understands AI agents — it i
 1. Go to repo Settings → Pages
 2. Under "Build and deployment", select **Source: GitHub Actions**
 3. Push to `main` — the workflow at `.github/workflows/pages.yml` handles the rest
-4. Site will be live at `https://arielshad.github.io/balagan-agent/`
+4. Site will be live at `https://arielshad.github.io/sentinel-ai/`

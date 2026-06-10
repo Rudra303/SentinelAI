@@ -1,27 +1,27 @@
-# BalaganAgent
+# SentinelAI
 
 <div style="text-align: center; margin: 2rem 0;">
-<img src="assets/ph-output/thumbnail.png" alt="BalaganAgent" style="width: 120px; height: 120px; margin-bottom: 1rem;">
+<img src="assets/ph-output/thumbnail.png" alt="SentinelAI" style="width: 120px; height: 120px; margin-bottom: 1rem;">
 <h2 style="font-size: 2rem; margin-bottom: 0.5rem;">Chaos Engineering for AI Agents</h2>
 <p style="font-size: 1.25rem; color: #666;">Everyone demos agents. Nobody stress-tests them.</p>
 </div>
 
 ---
 
-**BalaganAgent** is a reliability testing framework that stress-tests AI agents through controlled fault injection — because your agent *will* fail in production, and you should know how it handles it.
+**SentinelAI** is a reliability testing framework that stress-tests AI agents through controlled fault injection — because your agent *will* fail in production, and you should know how it handles it.
 
 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1.5rem 0;">
-<a href="https://pypi.org/project/balagan-agent/" style="text-decoration:none;">
-<img src="https://img.shields.io/pypi/v/balagan-agent.svg" alt="PyPI version">
+<a href="https://pypi.org/project/sentinel-ai/" style="text-decoration:none;">
+<img src="https://img.shields.io/pypi/v/sentinel-ai.svg" alt="PyPI version">
 </a>
-<a href="https://pypi.org/project/balagan-agent/" style="text-decoration:none;">
-<img src="https://img.shields.io/pypi/pyversions/balagan-agent.svg" alt="Python versions">
+<a href="https://pypi.org/project/sentinel-ai/" style="text-decoration:none;">
+<img src="https://img.shields.io/pypi/pyversions/sentinel-ai.svg" alt="Python versions">
 </a>
-<a href="https://github.com/arielshad/balagan-agent/actions" style="text-decoration:none;">
-<img src="https://github.com/arielshad/balagan-agent/workflows/Tests/badge.svg" alt="Tests">
+<a href="https://github.com/arielshad/sentinel-ai/actions" style="text-decoration:none;">
+<img src="https://github.com/arielshad/sentinel-ai/workflows/Tests/badge.svg" alt="Tests">
 </a>
-<a href="https://github.com/arielshad/balagan-agent" style="text-decoration:none;">
-<img src="https://img.shields.io/github/stars/arielshad/balagan-agent.svg?style=social" alt="GitHub stars">
+<a href="https://github.com/arielshad/sentinel-ai" style="text-decoration:none;">
+<img src="https://img.shields.io/github/stars/arielshad/sentinel-ai.svg?style=social" alt="GitHub stars">
 </a>
 </div>
 
@@ -33,7 +33,7 @@
 
 AI agents are entering production, but there's **zero reliability discipline**. Agents fail silently — tool calls time out, return garbage, or hallucinate. Context gets corrupted. Budgets get exhausted. Nobody knows until users complain.
 
-BalaganAgent brings battle-tested chaos engineering principles (Chaos Monkey, Gremlin) to AI agents.
+SentinelAI brings battle-tested chaos engineering principles (Chaos Monkey, Gremlin) to AI agents.
 
 <figure style="margin: 1.5rem 0;">
 <img src="assets/ph-output/gallery-2-solution.png" alt="Inject faults in dev, fix before production" style="width: 100%; border-radius: 8px;">
@@ -55,13 +55,13 @@ BalaganAgent brings battle-tested chaos engineering principles (Chaos Monkey, Gr
 ## Install
 
 ```bash
-pip install balagan-agent
+pip install sentinel-ai
 ```
 
 ## 60-second quickstart
 
 ```python
-from balaganagent import ChaosEngine, AgentWrapper
+from sentinelai import ChaosEngine, AgentWrapper
 
 # 1. Wrap your agent
 agent = MyAgent()
@@ -80,7 +80,7 @@ print(f"Reliability: {metrics['reliability_score']}")
 Or use the CLI:
 
 ```bash
-balaganagent demo --chaos-level 0.5
+sentinelai demo --chaos-level 0.5
 ```
 
 <figure style="margin: 1.5rem 0;">
@@ -110,7 +110,7 @@ Your browser does not support the video tag.
 
 - [How It Works](how-it-works.md) — chaos levels, injectors, metrics in depth
 - [Integrations](integrations.md) — CrewAI, AutoGen, LangChain, Claude SDK wrappers
-- [CLI Reference](cli.md) — `balaganagent run`, `stress`, `demo`, `init`
+- [CLI Reference](cli.md) — `sentinelai run`, `stress`, `demo`, `init`
 - [Examples](examples.md) — real-world usage scripts
 - [FAQ](faq.md) — common questions
 
@@ -120,6 +120,6 @@ Your browser does not support the video tag.
 
 **"Hope is not a strategy. Test your agents."**
 
-[GitHub](https://github.com/arielshad/balagan-agent){ .md-button } [PyPI](https://pypi.org/project/balagan-agent/){ .md-button .md-button--primary }
+[GitHub](https://github.com/arielshad/sentinel-ai){ .md-button } [PyPI](https://pypi.org/project/sentinel-ai/){ .md-button .md-button--primary }
 
 </div>

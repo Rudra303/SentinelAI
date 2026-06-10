@@ -1,10 +1,10 @@
-# BalaganAgent — agents.md
+# SentinelAI — agents.md
 
 > Chaos Engineering for AI Agents. Stress-test your agents before production breaks them.
 
 ## What This Project Does
 
-BalaganAgent is a reliability testing framework that injects controlled failures into AI agent tool calls to measure how agents handle faults, recover from errors, and degrade gracefully. It provides SRE-grade reliability metrics (MTTR, availability scores, error budgets) for AI agents.
+SentinelAI is a reliability testing framework that injects controlled failures into AI agent tool calls to measure how agents handle faults, recover from errors, and degrade gracefully. It provides SRE-grade reliability metrics (MTTR, availability scores, error budgets) for AI agents.
 
 ## Key Concepts
 
@@ -17,7 +17,7 @@ BalaganAgent is a reliability testing framework that injects controlled failures
 ## Project Structure
 
 ```
-balaganagent/
+sentinelai/
 ├── engine.py              # Core chaos orchestrator
 ├── wrapper.py             # Base agent wrapper (tool interception)
 ├── experiment.py          # Experiment config and results
@@ -48,11 +48,11 @@ tests/                     # Unit, BDD, and E2E tests
 claude-agent-sdk-demos/    # Claude Agent SDK demo agents
 ```
 
-## How to Use BalaganAgent
+## How to Use SentinelAI
 
 ### 1. Wrap an agent with chaos
 ```python
-from balaganagent.wrappers.crewai import CrewAIWrapper
+from sentinelai.wrappers.crewai import CrewAIWrapper
 
 wrapper = CrewAIWrapper(crew, chaos_level=0.5)
 wrapper.configure_chaos(
@@ -73,7 +73,7 @@ Metrics include: success rate, MTTR, recovery quality, SRE reliability grade (99
 
 ### 4. Generate reports
 ```python
-from balaganagent.reporting import Reporter
+from sentinelai.reporting import Reporter
 reporter = Reporter(results)
 reporter.generate("markdown")  # or "json", "html", "terminal"
 ```
@@ -82,10 +82,10 @@ reporter.generate("markdown")  # or "json", "html", "terminal"
 
 | Framework | Wrapper Class | Import Path |
 |-----------|--------------|-------------|
-| CrewAI | `CrewAIWrapper` | `balaganagent.wrappers.crewai` |
-| AutoGen | `AutoGenWrapper` | `balaganagent.wrappers.autogen` |
-| LangChain | `LangChainAgentWrapper` | `balaganagent.wrappers.langchain` |
-| Claude Agent SDK | `ClaudeAgentSDKWrapper` | `balaganagent.wrappers.claude_sdk` |
+| CrewAI | `CrewAIWrapper` | `sentinelai.wrappers.crewai` |
+| AutoGen | `AutoGenWrapper` | `sentinelai.wrappers.autogen` |
+| LangChain | `LangChainAgentWrapper` | `sentinelai.wrappers.langchain` |
+| Claude Agent SDK | `ClaudeAgentSDKWrapper` | `sentinelai.wrappers.claude_sdk` |
 
 ## Fault Injection Types
 
@@ -100,17 +100,17 @@ reporter.generate("markdown")  # or "json", "html", "terminal"
 ## Installation
 
 ```bash
-pip install balagan-agent
-pip install balagan-agent[crewai]      # With CrewAI support
-pip install balagan-agent[langchain]   # With LangChain support
-pip install balagan-agent[dev]         # Development dependencies
+pip install sentinel-ai
+pip install sentinel-ai[crewai]      # With CrewAI support
+pip install sentinel-ai[langchain]   # With LangChain support
+pip install sentinel-ai[dev]         # Development dependencies
 ```
 
 ## CLI Usage
 
 ```bash
-balaganagent run <scenario>            # Run a chaos scenario
-balaganagent stress <scenario>         # Stress test at escalating levels
-balaganagent demo --chaos-level 0.5    # Run demo experiment
-balaganagent init                      # Initialize new project
+sentinelai run <scenario>            # Run a chaos scenario
+sentinelai stress <scenario>         # Stress test at escalating levels
+sentinelai demo --chaos-level 0.5    # Run demo experiment
+sentinelai init                      # Initialize new project
 ```

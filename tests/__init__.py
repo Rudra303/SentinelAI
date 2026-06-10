@@ -1,1 +1,1 @@
-"""Tests for BalaganAgent."""
+"""Tests for SentinelAI."""

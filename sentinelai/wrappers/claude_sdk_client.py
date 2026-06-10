@@ -6,7 +6,7 @@ simulation, and timeout injection.
 
 Usage::
 
-    from balaganagent.wrappers.claude_sdk_client import ChaosClaudeSDKClient
+    from sentinelai.wrappers.claude_sdk_client import ChaosClaudeSDKClient
 
     client = ChaosClaudeSDKClient(
         options=my_options,

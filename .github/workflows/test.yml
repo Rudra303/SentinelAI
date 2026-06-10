@@ -34,7 +34,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=balaganagent --cov-report=xml --cov-report=term-missing -v
+          pytest --cov=sentinelai --cov-report=xml --cov-report=term-missing -v
 
       - name: Upload coverage to Codecov
         if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.11'
@@ -64,13 +64,13 @@ jobs:
           pip install -e ".[dev]"
 
       - name: Check code formatting with black
-        run: black --check balaganagent/ tests/
+        run: black --check sentinelai/ tests/
 
       - name: Lint with ruff
-        run: ruff check balaganagent/ tests/
+        run: ruff check sentinelai/ tests/
 
       - name: Type check with mypy
-        run: mypy balaganagent/
+        run: mypy sentinelai/
 
   cli-test:
     name: CLI Tests
@@ -93,12 +93,12 @@ jobs:
 
       - name: Test CLI installation
         run: |
-          balaganagent --version
-          balaganagent --help
+          sentinelai --version
+          sentinelai --help
 
       - name: Test CLI commands
         run: |
-          balaganagent demo --chaos-level 0.1
+          sentinelai demo --chaos-level 0.1
 
   integration-test:
     name: Integration Tests (CrewAI)

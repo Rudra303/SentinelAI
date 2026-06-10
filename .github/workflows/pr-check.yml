@@ -61,17 +61,17 @@ jobs:
 
       - name: Check code formatting
         run: |
-          black --check balaganagent/ tests/
+          black --check sentinelai/ tests/
         continue-on-error: false
 
       - name: Lint code
         run: |
-          ruff check balaganagent/ tests/
+          ruff check sentinelai/ tests/
         continue-on-error: false
 
       - name: Type check
         run: |
-          mypy balaganagent/
+          mypy sentinelai/
         continue-on-error: false
 
   tests:
@@ -95,7 +95,7 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          pytest --cov=balaganagent --cov-report=xml --cov-report=term-missing --cov-fail-under=50 -v
+          pytest --cov=sentinelai --cov-report=xml --cov-report=term-missing --cov-fail-under=50 -v
 
       - name: Comment coverage on PR
         if: github.event_name == 'pull_request'

@@ -1,11 +1,11 @@
 blank_issues_enabled: false
 contact_links:
   - name: 💬 Ask a Question
-    url: https://github.com/arielshad/balagan-agent/discussions/new?category=q-a
+    url: https://github.com/arielshad/sentinel-ai/discussions/new?category=q-a
     about: Ask questions and get help from the community
   - name: 💡 Share an Idea
-    url: https://github.com/arielshad/balagan-agent/discussions/new?category=ideas
+    url: https://github.com/arielshad/sentinel-ai/discussions/new?category=ideas
     about: Share ideas and discuss potential features with the community
   - name: 🏆 Show & Tell
-    url: https://github.com/arielshad/balagan-agent/discussions/new?category=show-and-tell
-    about: Share what you've built with BalaganAgent
+    url: https://github.com/arielshad/sentinel-ai/discussions/new?category=show-and-tell
+    about: Share what you've built with SentinelAI

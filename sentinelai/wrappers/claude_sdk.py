@@ -6,7 +6,7 @@ points — ``query()`` for one-shot prompts and ``ClaudeSDKClient`` for
 bidirectional conversations — and custom tools defined via the ``@tool``
 decorator + ``create_sdk_mcp_server()``.
 
-BalaganAgent intercepts **custom tool functions** before they are registered
+SentinelAI intercepts **custom tool functions** before they are registered
 with the SDK so that every invocation passes through the chaos engine.  The
 wrapper also collects per-tool metrics, MTTR stats and supports named
 experiments.
@@ -14,7 +14,7 @@ experiments.
 Example usage::
 
     from claude_agent_sdk import tool, create_sdk_mcp_server, ClaudeAgentOptions
-    from balaganagent.wrappers.claude_sdk import ClaudeAgentSDKWrapper
+    from sentinelai.wrappers.claude_sdk import ClaudeAgentSDKWrapper
 
     @tool("search", "Search the web", {"query": str})
     async def search(args):
@@ -275,7 +275,7 @@ class ClaudeAgentSDKWrapper:
     ``ClaudeSDKClient``, and custom tools via ``@tool`` +
     ``create_sdk_mcp_server()``.  This wrapper sits between
     the tool definitions and the MCP server creation so that
-    every tool invocation flows through BalaganAgent injectors.
+    every tool invocation flows through SentinelAI injectors.
 
     Usage::
 

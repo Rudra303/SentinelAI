@@ -1,14 +1,14 @@
-# BalaganAgent
+# SentinelAI
 
 <div align="center">
 
-[![PyPI version](https://img.shields.io/pypi/v/balagan-agent.svg)](https://pypi.org/project/balagan-agent/)
-[![Python versions](https://img.shields.io/pypi/pyversions/balagan-agent.svg)](https://pypi.org/project/balagan-agent/)
+[![PyPI version](https://img.shields.io/pypi/v/sentinel-ai.svg)](https://pypi.org/project/sentinel-ai/)
+[![Python versions](https://img.shields.io/pypi/pyversions/sentinel-ai.svg)](https://pypi.org/project/sentinel-ai/)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Tests](https://github.com/arielshad/balagan-agent/workflows/Tests/badge.svg)](https://github.com/arielshad/balagan-agent/actions)
+[![Tests](https://github.com/arielshad/sentinel-ai/workflows/Tests/badge.svg)](https://github.com/arielshad/sentinel-ai/actions)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
-[![Downloads](https://img.shields.io/pypi/dm/balagan-agent.svg)](https://pypi.org/project/balagan-agent/)
-[![GitHub stars](https://img.shields.io/github/stars/arielshad/balagan-agent.svg?style=social)](https://github.com/arielshad/balagan-agent)
+[![Downloads](https://img.shields.io/pypi/dm/sentinel-ai.svg)](https://pypi.org/project/sentinel-ai/)
+[![GitHub stars](https://img.shields.io/github/stars/arielshad/sentinel-ai.svg?style=social)](https://github.com/arielshad/sentinel-ai)
 
 **Chaos Engineering for AI Agents**
 
@@ -16,26 +16,26 @@ Everyone demos agents. Nobody stress-tests them.
 
 [Quick Start](#quick-start) •
 [Features](#features) •
-[Docs](https://arielshad.github.io/balagan-agent/) •
+[Docs](https://arielshad.github.io/sentinel-ai/) •
 [Examples](#examples) •
 [Contributing](#contributing)
 
 </div>
 
-BalaganAgent is a reliability testing framework that stress-tests AI agents through controlled fault injection—because your agent will fail in production, and you should know how it handles it.
+SentinelAI is a reliability testing framework that stress-tests AI agents through controlled fault injection—because your agent will fail in production, and you should know how it handles it.
 
-> **Latest: v0.4.0** — [Changelog](CHANGELOG.md) · [Full Documentation](https://arielshad.github.io/balagan-agent/)
+> **Latest: v0.4.0** — [Changelog](CHANGELOG.md) · [Full Documentation](https://arielshad.github.io/sentinel-ai/)
 
 ```bash
-pip install balagan-agent        # Install
-balaganagent demo --chaos-level 0.5  # Run your first experiment in 60 seconds
+pip install sentinel-ai        # Install
+sentinelai demo --chaos-level 0.5  # Run your first experiment in 60 seconds
 ```
 
 ---
 
 ## Table of Contents
 
-- [Why BalaganAgent?](#why-balaganagent)
+- [Why SentinelAI?](#why-sentinelai)
 - [Features](#features)
 - [Quick Start](#quick-start)
 - [Use Cases](#use-cases)
@@ -49,9 +49,9 @@ balaganagent demo --chaos-level 0.5  # Run your first experiment in 60 seconds
 - [Roadmap](#roadmap)
 - [License](#license)
 
-## Why BalaganAgent?
+## Why SentinelAI?
 
-AI agents are entering production environments, but there's zero reliability discipline. BalaganAgent brings the battle-tested principles of chaos engineering (think Chaos Monkey, Gremlin) to the world of AI agents.
+AI agents are entering production environments, but there's zero reliability discipline. SentinelAI brings the battle-tested principles of chaos engineering (think Chaos Monkey, Gremlin) to the world of AI agents.
 
 ### The Problem
 - Agents fail silently in production
@@ -67,7 +67,7 @@ AI agents are entering production environments, but there's zero reliability dis
 
 ### Industry Adoption
 
-BalaganAgent is designed for teams that take AI reliability seriously:
+SentinelAI is designed for teams that take AI reliability seriously:
 - Production AI systems requiring SLO compliance
 - Enterprise deployments with strict reliability requirements
 - Development teams practicing chaos engineering
@@ -101,13 +101,13 @@ Get up and running in minutes.
 ### Installation
 
 ```bash
-pip install balagan-agent
+pip install sentinel-ai
 ```
 
 Verify installation:
 
 ```bash
-balaganagent --version
+sentinelai --version
 ```
 
 ### CrewAI Integration
@@ -116,7 +116,7 @@ balaganagent --version
 
 Quick example:
 ```python
-from balaganagent.wrappers.crewai import CrewAIWrapper
+from sentinelai.wrappers.crewai import CrewAIWrapper
 
 # Your existing CrewAI setup
 crew = Crew(agents=[agent], tasks=[task])
@@ -136,7 +136,7 @@ print(f"Success rate: {metrics['aggregate']['operations']['success_rate']:.1%}")
 ### Basic Usage
 
 ```python
-from balaganagent import ChaosEngine, AgentWrapper
+from sentinelai import ChaosEngine, AgentWrapper
 
 # Your agent with tools
 class MyAgent:
@@ -158,8 +158,8 @@ result = wrapper.call_tool("search", "test query")
 ### Run an Experiment
 
 ```python
-from balaganagent import ChaosEngine
-from balaganagent.runner import scenario, ExperimentRunner
+from sentinelai import ChaosEngine
+from sentinelai.runner import scenario, ExperimentRunner
 
 # Define a test scenario
 test = (
@@ -185,21 +185,21 @@ print(f"MTTR: {result.mttr_stats['mttr_seconds']:.2f}s")
 
 ```bash
 # Run a demo
-balaganagent demo --chaos-level 0.5
+sentinelai demo --chaos-level 0.5
 
 # Initialize a new project
-balaganagent init my-chaos-tests
+sentinelai init my-chaos-tests
 
 # Run a scenario file
-balaganagent run scenarios/search_test.json --chaos-level 0.75
+sentinelai run scenarios/search_test.json --chaos-level 0.75
 
 # Run stress tests
-balaganagent stress scenarios/critical_path.json --iterations 100
+sentinelai stress scenarios/critical_path.json --iterations 100
 ```
 
 ## Use Cases
 
-BalaganAgent helps you answer critical questions about your agents:
+SentinelAI helps you answer critical questions about your agents:
 
 - **Pre-Production Validation**: Will my agent handle API timeouts gracefully?
 - **Integration Testing**: Does my agent recover when tools return malformed data?
@@ -227,8 +227,8 @@ The `chaos_level` parameter controls fault injection probability:
 Simulates various tool failure modes:
 
 ```python
-from balaganagent.injectors import ToolFailureInjector
-from balaganagent.injectors.tool_failure import ToolFailureConfig, FailureMode
+from sentinelai.injectors import ToolFailureInjector
+from sentinelai.injectors.tool_failure import ToolFailureConfig, FailureMode
 
 injector = ToolFailureInjector(ToolFailureConfig(
     probability=0.1,
@@ -245,8 +245,8 @@ injector = ToolFailureInjector(ToolFailureConfig(
 Simulates network latency patterns:
 
 ```python
-from balaganagent.injectors import DelayInjector
-from balaganagent.injectors.delay import DelayConfig, DelayPattern, LatencySimulator
+from sentinelai.injectors import DelayInjector
+from sentinelai.injectors.delay import DelayConfig, DelayPattern, LatencySimulator
 
 # Use presets
 injector = LatencySimulator.create("poor")  # High latency, high jitter
@@ -266,8 +266,8 @@ injector = DelayInjector(DelayConfig(
 Corrupts data to test agent's ability to detect bad information:
 
 ```python
-from balaganagent.injectors import HallucinationInjector
-from balaganagent.injectors.hallucination import HallucinationConfig, HallucinationType
+from sentinelai.injectors import HallucinationInjector
+from sentinelai.injectors.hallucination import HallucinationConfig, HallucinationType
 
 injector = HallucinationInjector(HallucinationConfig(
     probability=0.05,
@@ -285,8 +285,8 @@ injector = HallucinationInjector(HallucinationConfig(
 Tests behavior when resources run out:
 
 ```python
-from balaganagent.injectors import BudgetExhaustionInjector
-from balaganagent.injectors.budget import BudgetExhaustionConfig
+from sentinelai.injectors import BudgetExhaustionInjector
+from sentinelai.injectors.budget import BudgetExhaustionConfig
 
 injector = BudgetExhaustionInjector(BudgetExhaustionConfig(
     token_limit=10000,
@@ -301,7 +301,7 @@ injector = BudgetExhaustionInjector(BudgetExhaustionConfig(
 ### MTTR Calculator
 
 ```python
-from balaganagent.metrics import MTTRCalculator
+from sentinelai.metrics import MTTRCalculator
 
 calc = MTTRCalculator()
 
@@ -318,7 +318,7 @@ print(f"Recovery Rate: {stats['recovery_rate']:.1%}")
 ### Reliability Scorer
 
 ```python
-from balaganagent.metrics import ReliabilityScorer
+from sentinelai.metrics import ReliabilityScorer
 
 scorer = ReliabilityScorer(slos={
     "availability": 0.99,
@@ -384,7 +384,7 @@ for level, data in results["levels"].items():
 Generate reports in multiple formats:
 
 ```python
-from balaganagent.reporting import ReportGenerator
+from sentinelai.reporting import ReportGenerator
 
 gen = ReportGenerator()
 report = gen.generate_from_results(results, metrics)
@@ -402,7 +402,7 @@ gen.save(report, "report.html", format="html")
 
 ```
 ============================================================
-  BALAGANAGENT EXPERIMENT REPORT
+  SENTINELAGENT EXPERIMENT REPORT
 ============================================================
 
   Generated: 2024-01-15T10:30:00
@@ -435,7 +435,7 @@ RECOMMENDATIONS
 ## Project Structure
 
 ```
-balaganagent/
+sentinelai/
 ├── __init__.py          # Main exports
 ├── engine.py            # Chaos engine core
 ├── experiment.py        # Experiment definitions
@@ -459,9 +459,9 @@ balaganagent/
 
 ## Documentation
 
-- **[Full Docs (GitHub Pages)](https://arielshad.github.io/balagan-agent/)** - How it works, integrations, CLI reference, FAQ
+- **[Full Docs (GitHub Pages)](https://arielshad.github.io/sentinel-ai/)** - How it works, integrations, CLI reference, FAQ
 - **[Development Guide](DEVELOPMENT.md)** - Set up your development environment
-- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to BalaganAgent
+- **[Contributing Guide](CONTRIBUTING.md)** - How to contribute to SentinelAI
 - **[Security Policy](SECURITY.md)** - Vulnerability reporting process
 - **[Changelog](CHANGELOG.md)** - Version history and release notes
 - **[CrewAI Integration](CREWAI_INTEGRATION_GUIDE.md)** - Step-by-step CrewAI setup
@@ -477,8 +477,8 @@ Check out real-world examples:
 
 ## Community
 
-- **GitHub Discussions**: [Ask questions and share ideas](https://github.com/arielshad/balagan-agent/discussions)
-- **Issue Tracker**: [Report bugs and request features](https://github.com/arielshad/balagan-agent/issues)
+- **GitHub Discussions**: [Ask questions and share ideas](https://github.com/arielshad/sentinel-ai/discussions)
+- **Issue Tracker**: [Report bugs and request features](https://github.com/arielshad/sentinel-ai/issues)
 - **Linkedin**: Follow for updates [ariel-shadkhan](https://www.linkedin.com/in/ariel-shadkhan/)
 
 
@@ -498,8 +498,8 @@ Please read our [Contributing Guide](CONTRIBUTING.md) and [Development Guide](DE
 
 Thanks to all our contributors!
 
-<a href="https://github.com/arielshad/balagan-agent/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=arielshad/balagan-agent" />
+<a href="https://github.com/arielshad/sentinel-ai/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=arielshad/sentinel-ai" />
 </a>
 
 ## Roadmap
@@ -525,13 +525,13 @@ Thanks to all our contributors!
 - 📋 Production chaos (with safeguards)
 - 📋 Cost impact analysis
 
-Have an idea? [Open a discussion](https://github.com/arielshad/balagan-agent/discussions)!
+Have an idea? [Open a discussion](https://github.com/arielshad/sentinel-ai/discussions)!
 
 ## Comparison
 
-### BalaganAgent vs Manual Testing
+### SentinelAI vs Manual Testing
 
-| Aspect | Manual Testing | BalaganAgent |
+| Aspect | Manual Testing | SentinelAI |
 |--------|----------------|--------------|
 | Coverage | Limited scenarios | Comprehensive failure modes |
 | Consistency | Varies by tester | Reproducible experiments |
@@ -539,9 +539,9 @@ Have an idea? [Open a discussion](https://github.com/arielshad/balagan-agent/dis
 | Scale | Time-consuming | Run 100s of tests easily |
 | Integration | N/A | Built-in CI/CD support |
 
-### BalaganAgent vs Traditional Chaos Tools
+### SentinelAI vs Traditional Chaos Tools
 
-Tools like Chaos Monkey and Gremlin are infrastructure-focused. BalaganAgent is purpose-built for AI agents:
+Tools like Chaos Monkey and Gremlin are infrastructure-focused. SentinelAI is purpose-built for AI agents:
 
 - **Agent-aware**: Understands LLMs, tools, context, prompts
 - **Semantic failures**: Injects hallucinations, not just network errors
@@ -562,8 +562,8 @@ Apache License 2.0 - see [LICENSE](LICENSE) for details
 
 ## Star History
 
-<a href="https://star-history.com/#arielshad/balagan-agent&Date">
-  <img src="https://api.star-history.com/svg?repos=arielshad/balagan-agent&type=Date" alt="Star History Chart" width="600">
+<a href="https://star-history.com/#arielshad/sentinel-ai&Date">
+  <img src="https://api.star-history.com/svg?repos=arielshad/sentinel-ai&type=Date" alt="Star History Chart" width="600">
 </a>
 
 ---
@@ -574,6 +574,6 @@ Apache License 2.0 - see [LICENSE](LICENSE) for details
 
 Made with ❤️ by the reliability community
 
-[⭐ Star on GitHub](https://github.com/arielshad/balagan-agent) • [📦 PyPI Package](https://pypi.org/project/balagan-agent/) • [🐛 Report Bug](https://github.com/arielshad/balagan-agent/issues) • [💡 Request Feature](https://github.com/arielshad/balagan-agent/discussions)
+[⭐ Star on GitHub](https://github.com/arielshad/sentinel-ai) • [📦 PyPI Package](https://pypi.org/project/sentinel-ai/) • [🐛 Report Bug](https://github.com/arielshad/sentinel-ai/issues) • [💡 Request Feature](https://github.com/arielshad/sentinel-ai/discussions)
 
 </div>

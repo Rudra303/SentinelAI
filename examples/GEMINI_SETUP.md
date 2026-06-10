@@ -114,10 +114,10 @@ crew = Crew(
 result = crew.kickoff()
 ```
 
-## Stress Testing with BalaganAgent
+## Stress Testing with SentinelAI
 
 ```python
-from balaganagent.wrappers.crewai import CrewAIWrapper
+from sentinelai.wrappers.crewai import CrewAIWrapper
 from examples.crewai_gemini_research_agent import build_research_crew
 
 # Build and wrap the crew

@@ -83,7 +83,7 @@ class TestLangGraphE2EWorkflow:
 
     def test_simple_graph_workflow_no_chaos(self):
         """Test a simple graph workflow without chaos injection."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def agent_node(state):
             return {"messages": state.get("messages", []) + ["agent response"]}
@@ -102,9 +102,9 @@ class TestLangGraphE2EWorkflow:
 
     def test_graph_with_tool_failure_injection(self):
         """Test graph workflow with tool failure chaos injection."""
-        from balaganagent.injectors import ToolFailureInjector
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.injectors import ToolFailureInjector
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def search_func(query: str) -> str:
             return f"Results: {query}"
@@ -124,9 +124,9 @@ class TestLangGraphE2EWorkflow:
 
     def test_graph_with_delays(self):
         """Test graph workflow with artificial delays."""
-        from balaganagent.injectors import DelayInjector
-        from balaganagent.injectors.delay import DelayConfig
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.injectors import DelayInjector
+        from sentinelai.injectors.delay import DelayConfig
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def fast_tool(x: str) -> str:
             return f"fast: {x}"
@@ -146,7 +146,7 @@ class TestLangGraphE2EWorkflow:
 
     def test_experiment_tracking(self):
         """Test graph workflow within an experiment context."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         graph = MockCompiledGraph()
         wrapper = LangGraphWrapper(graph, chaos_level=0.0)
@@ -161,7 +161,7 @@ class TestLangGraphE2EWorkflow:
 
     def test_multi_tool_graph(self):
         """Test graph with multiple tools."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         tools = [
             MockTool("search_web", lambda q: {"source": "web", "query": q}),
@@ -182,7 +182,7 @@ class TestLangGraphE2EWorkflow:
 
     def test_chaos_level_configuration(self):
         """Test configuring different chaos levels."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         graph = MockCompiledGraph()
         wrapper = LangGraphWrapper(graph)
@@ -197,7 +197,7 @@ class TestLangGraphE2EWorkflow:
 
     def test_metrics_collection_e2e(self):
         """Test comprehensive metrics collection during workflow."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         graph = MockCompiledGraph()
         wrapper = LangGraphWrapper(graph, chaos_level=0.0)
@@ -210,7 +210,7 @@ class TestLangGraphE2EWorkflow:
 
     def test_reset_workflow_state(self):
         """Test resetting workflow state between experiments."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         graph = MockCompiledGraph()
         wrapper = LangGraphWrapper(graph, chaos_level=0.0)
@@ -231,7 +231,7 @@ class TestLangGraphE2EWorkflow:
 
     def test_streaming_workflow(self):
         """Test streaming response workflow (node-by-node)."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def agent_node(state):
             return state
@@ -247,7 +247,7 @@ class TestLangGraphE2EWorkflow:
 
     def test_batch_workflow(self):
         """Test batch invocation workflow."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         graph = MockCompiledGraph()
         wrapper = LangGraphWrapper(graph, chaos_level=0.0)
@@ -266,9 +266,9 @@ class TestLangGraphNodeChaosE2E:
         """Test injecting delays at a specific node."""
         import time
 
-        from balaganagent.injectors import DelayInjector
-        from balaganagent.injectors.delay import DelayConfig
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.injectors import DelayInjector
+        from sentinelai.injectors.delay import DelayConfig
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def slow_node(state):
             return {"messages": state.get("messages", []) + ["processed"]}
@@ -291,7 +291,7 @@ class TestLangGraphNodeChaosE2E:
 
     def test_node_metrics_tracking(self):
         """Test that node execution metrics are tracked."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def my_node(state):
             return state
@@ -314,10 +314,10 @@ class TestLangGraphNodeChaosE2E:
 
     def test_mixed_tool_and_node_chaos(self):
         """Test combining tool-level and node-level chaos."""
-        from balaganagent.injectors import DelayInjector, ToolFailureInjector
-        from balaganagent.injectors.delay import DelayConfig
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.injectors import DelayInjector, ToolFailureInjector
+        from sentinelai.injectors.delay import DelayConfig
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         search_tool = MockTool("search", lambda q: f"results: {q}")
         tool_node = MockToolNode([search_tool])
@@ -343,7 +343,7 @@ class TestLangGraphNodeChaosE2E:
 
     def test_node_failure_propagation(self):
         """Test that node failures are recorded and propagated."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def failing_node(state):
             raise ValueError("Node processing failed")
@@ -368,7 +368,7 @@ class TestLangGraphAsyncE2E:
     @pytest.mark.asyncio
     async def test_async_graph_workflow(self):
         """Test async graph workflow."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         graph = MockCompiledGraph()
         wrapper = LangGraphWrapper(graph, chaos_level=0.0)
@@ -379,7 +379,7 @@ class TestLangGraphAsyncE2E:
     @pytest.mark.asyncio
     async def test_async_streaming(self):
         """Test async streaming."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def agent_node(state):
             return state
@@ -396,7 +396,7 @@ class TestLangGraphAsyncE2E:
     @pytest.mark.asyncio
     async def test_async_batch(self):
         """Test async batch."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         graph = MockCompiledGraph()
         wrapper = LangGraphWrapper(graph, chaos_level=0.0)
@@ -410,7 +410,7 @@ class TestLangGraphStateManagement:
 
     def test_get_state(self):
         """Test get_state passes through to compiled graph."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         graph = MockCompiledGraph()
         wrapper = LangGraphWrapper(graph)
@@ -421,7 +421,7 @@ class TestLangGraphStateManagement:
 
     def test_update_state(self):
         """Test update_state passes through to compiled graph."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         graph = MockCompiledGraph()
         wrapper = LangGraphWrapper(graph)
@@ -435,7 +435,7 @@ class TestLangGraphErrorHandling:
 
     def test_tool_proxy_exhausts_retries(self):
         """Test behavior when tool exhausts all retries."""
-        from balaganagent.wrappers.langgraph import LangGraphToolProxy
+        from sentinelai.wrappers.langgraph import LangGraphToolProxy
 
         def always_fails(*args):
             raise RuntimeError("Permanent failure")
@@ -453,7 +453,7 @@ class TestLangGraphErrorHandling:
 
     def test_tool_proxy_recovers_from_transient_failure(self):
         """Test tool proxy recovers from transient failures."""
-        from balaganagent.wrappers.langgraph import LangGraphToolProxy
+        from sentinelai.wrappers.langgraph import LangGraphToolProxy
 
         call_count = 0
 

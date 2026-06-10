@@ -208,9 +208,9 @@ export const SlideReport: React.FC = () => (
         color: theme.text,
       }}
     >
-      <div style={{color: theme.textMuted, marginBottom: 12}}>$ balaganagent demo --chaos-level 0.5</div>
+      <div style={{color: theme.textMuted, marginBottom: 12}}>$ sentinelai demo --chaos-level 0.5</div>
       <div style={{marginBottom: 8}}>
-        <span style={{color: theme.accent}}>{'═══ BalaganAgent Chaos Report ═══'}</span>
+        <span style={{color: theme.accent}}>{'═══ SentinelAI Chaos Report ═══'}</span>
       </div>
       <div><span style={{color: theme.textMuted}}>Experiment:</span> stress_test_crew</div>
       <div><span style={{color: theme.textMuted}}>Chaos Level:</span> <span style={{color: theme.yellow}}>0.50</span></div>
@@ -262,9 +262,9 @@ export const SlideCode: React.FC = () => (
         color: theme.text,
       }}
     >
-      <div style={{color: theme.textMuted}}>{'# pip install balagan-agent'}</div>
+      <div style={{color: theme.textMuted}}>{'# pip install sentinel-ai'}</div>
       <div>
-        <span style={{color: theme.purple}}>from</span> balaganagent <span style={{color: theme.purple}}>import</span> ChaosExperiment
+        <span style={{color: theme.purple}}>from</span> sentinelai <span style={{color: theme.purple}}>import</span> ChaosExperiment
       </div>
       <div>&nbsp;</div>
       <div>

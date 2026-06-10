@@ -14,7 +14,7 @@ class TestLangGraphWrapper:
 
     def test_wrapper_creation(self):
         """Test that wrapper can be created with mock compiled graph."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -25,7 +25,7 @@ class TestLangGraphWrapper:
 
     def test_wrapper_with_chaos_level(self):
         """Test wrapper can be configured with chaos level."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -35,7 +35,7 @@ class TestLangGraphWrapper:
 
     def test_wrap_tools_from_tool_node(self):
         """Test that tools are discovered from ToolNode instances in graph.nodes."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         # Create mock tools
         mock_tool1 = MagicMock()
@@ -63,7 +63,7 @@ class TestLangGraphWrapper:
 
     def test_wrap_tools_explicit(self):
         """Test that explicitly passed tools are wrapped."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_tool = MagicMock()
         mock_tool.name = "explicit_tool"
@@ -80,7 +80,7 @@ class TestLangGraphWrapper:
 
     def test_wrap_tools_deduplication(self):
         """Test that duplicate tools are not wrapped twice."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_tool = MagicMock()
         mock_tool.name = "shared_tool"
@@ -103,7 +103,7 @@ class TestLangGraphWrapper:
 
     def test_invoke(self):
         """Test that invoke runs through to the compiled graph."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -118,7 +118,7 @@ class TestLangGraphWrapper:
 
     def test_invoke_with_config(self):
         """Test invoke with additional config."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -132,7 +132,7 @@ class TestLangGraphWrapper:
 
     def test_stream_method(self):
         """Test streaming responses through wrapper."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -148,7 +148,7 @@ class TestLangGraphWrapper:
 
     def test_batch_invoke(self):
         """Test batch invocation of multiple inputs."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -163,7 +163,7 @@ class TestLangGraphWrapper:
 
     def test_get_metrics(self):
         """Test that metrics are collected properly."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -181,9 +181,9 @@ class TestLangGraphWrapper:
 
     def test_chaos_injection_on_tools(self):
         """Test that chaos injectors can be added to tools."""
-        from balaganagent.injectors import ToolFailureInjector
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.injectors import ToolFailureInjector
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_tool = MagicMock()
         mock_tool.name = "flaky_tool"
@@ -203,7 +203,7 @@ class TestLangGraphWrapper:
 
     def test_reset_wrapper(self):
         """Test wrapper state reset."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -222,7 +222,7 @@ class TestLangGraphWrapper:
 
     def test_experiment_context(self):
         """Test running graph within an experiment context."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -240,7 +240,7 @@ class TestLangGraphWrapper:
 
     def test_configure_chaos_all_options(self):
         """Test configuring chaos with all options."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -260,7 +260,7 @@ class TestLangGraphWrapper:
 
     def test_get_state_passthrough(self):
         """Test get_state passes through to compiled graph."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -275,7 +275,7 @@ class TestLangGraphWrapper:
 
     def test_update_state_passthrough(self):
         """Test update_state passes through to compiled graph."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -290,7 +290,7 @@ class TestLangGraphWrapper:
 
     def test_get_mttr_stats(self):
         """Test MTTR stats collection."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -308,7 +308,7 @@ class TestLangGraphToolProxy:
 
     def test_tool_proxy_creation(self):
         """Test tool proxy is created correctly."""
-        from balaganagent.wrappers.langgraph import LangGraphToolProxy
+        from sentinelai.wrappers.langgraph import LangGraphToolProxy
 
         mock_tool = MagicMock()
         mock_tool.name = "test_tool"
@@ -319,7 +319,7 @@ class TestLangGraphToolProxy:
 
     def test_tool_proxy_call(self):
         """Test tool proxy calls the underlying tool."""
-        from balaganagent.wrappers.langgraph import LangGraphToolProxy
+        from sentinelai.wrappers.langgraph import LangGraphToolProxy
 
         mock_tool = MagicMock()
         mock_tool.name = "test_tool"
@@ -333,7 +333,7 @@ class TestLangGraphToolProxy:
 
     def test_tool_proxy_records_call_history(self):
         """Test tool proxy records call history."""
-        from balaganagent.wrappers.langgraph import LangGraphToolProxy
+        from sentinelai.wrappers.langgraph import LangGraphToolProxy
 
         mock_tool = MagicMock()
         mock_tool.name = "tracked_tool"
@@ -350,7 +350,7 @@ class TestLangGraphToolProxy:
 
     def test_tool_proxy_retry_on_failure(self):
         """Test tool proxy retries on transient failures."""
-        from balaganagent.wrappers.langgraph import LangGraphToolProxy
+        from sentinelai.wrappers.langgraph import LangGraphToolProxy
 
         mock_tool = MagicMock()
         mock_tool.name = "flaky_tool"
@@ -366,7 +366,7 @@ class TestLangGraphToolProxy:
 
     def test_tool_proxy_exhausts_retries(self):
         """Test tool proxy raises after exhausting retries."""
-        from balaganagent.wrappers.langgraph import LangGraphToolProxy
+        from sentinelai.wrappers.langgraph import LangGraphToolProxy
 
         mock_tool = MagicMock()
         mock_tool.name = "broken_tool"
@@ -379,7 +379,7 @@ class TestLangGraphToolProxy:
 
     def test_tool_proxy_metrics(self):
         """Test tool proxy collects metrics."""
-        from balaganagent.wrappers.langgraph import LangGraphToolProxy
+        from sentinelai.wrappers.langgraph import LangGraphToolProxy
 
         mock_tool = MagicMock()
         mock_tool.name = "metric_tool"
@@ -393,7 +393,7 @@ class TestLangGraphToolProxy:
 
     def test_tool_proxy_reset(self):
         """Test tool proxy reset clears state."""
-        from balaganagent.wrappers.langgraph import LangGraphToolProxy
+        from sentinelai.wrappers.langgraph import LangGraphToolProxy
 
         mock_tool = MagicMock()
         mock_tool.name = "reset_tool"
@@ -412,7 +412,7 @@ class TestLangGraphNodeProxy:
 
     def test_node_proxy_creation(self):
         """Test node proxy is created correctly."""
-        from balaganagent.wrappers.langgraph import LangGraphNodeProxy
+        from sentinelai.wrappers.langgraph import LangGraphNodeProxy
 
         def my_node(state):
             return state
@@ -422,7 +422,7 @@ class TestLangGraphNodeProxy:
 
     def test_node_proxy_call_success(self):
         """Test node proxy calls the underlying function."""
-        from balaganagent.wrappers.langgraph import LangGraphNodeProxy
+        from sentinelai.wrappers.langgraph import LangGraphNodeProxy
 
         def my_node(state):
             return {"messages": state.get("messages", []) + ["processed"]}
@@ -434,7 +434,7 @@ class TestLangGraphNodeProxy:
 
     def test_node_proxy_records_event_history(self):
         """Test node proxy records execution events."""
-        from balaganagent.wrappers.langgraph import LangGraphNodeProxy
+        from sentinelai.wrappers.langgraph import LangGraphNodeProxy
 
         def my_node(state):
             return state
@@ -450,7 +450,7 @@ class TestLangGraphNodeProxy:
 
     def test_node_proxy_failure_propagation(self):
         """Test node proxy records errors and re-raises."""
-        from balaganagent.wrappers.langgraph import LangGraphNodeProxy
+        from sentinelai.wrappers.langgraph import LangGraphNodeProxy
 
         def failing_node(state):
             raise ValueError("node crashed")
@@ -467,7 +467,7 @@ class TestLangGraphNodeProxy:
 
     def test_node_proxy_metrics(self):
         """Test node proxy collects metrics."""
-        from balaganagent.wrappers.langgraph import LangGraphNodeProxy
+        from sentinelai.wrappers.langgraph import LangGraphNodeProxy
 
         def my_node(state):
             return state
@@ -480,7 +480,7 @@ class TestLangGraphNodeProxy:
 
     def test_node_proxy_reset(self):
         """Test node proxy reset clears state."""
-        from balaganagent.wrappers.langgraph import LangGraphNodeProxy
+        from sentinelai.wrappers.langgraph import LangGraphNodeProxy
 
         def my_node(state):
             return state
@@ -498,7 +498,7 @@ class TestLangGraphNodeWrapping:
 
     def test_wrap_node(self):
         """Test wrapping a node replaces it in graph.nodes."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def tool_executor(state):
             return state
@@ -516,7 +516,7 @@ class TestLangGraphNodeWrapping:
 
     def test_wrap_nonexistent_node(self):
         """Test wrapping a nonexistent node returns None."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -529,7 +529,7 @@ class TestLangGraphNodeWrapping:
 
     def test_wrapped_node_appears_in_get_wrapped_nodes(self):
         """Test wrapped nodes are tracked."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def my_node(state):
             return state
@@ -546,7 +546,7 @@ class TestLangGraphNodeWrapping:
 
     def test_node_metrics_in_get_metrics(self):
         """Test node metrics appear in wrapper.get_metrics()."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def my_node(state):
             return state
@@ -568,9 +568,9 @@ class TestLangGraphNodeWrapping:
 
     def test_add_injector_to_nodes(self):
         """Test adding injectors to specific nodes."""
-        from balaganagent.injectors import DelayInjector
-        from balaganagent.injectors.delay import DelayConfig
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.injectors import DelayInjector
+        from sentinelai.injectors.delay import DelayConfig
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         def my_node(state):
             return state
@@ -596,7 +596,7 @@ class TestLangGraphAsyncSupport:
     @pytest.mark.asyncio
     async def test_async_invoke(self):
         """Test async invocation through wrapper."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}
@@ -611,7 +611,7 @@ class TestLangGraphAsyncSupport:
     @pytest.mark.asyncio
     async def test_async_stream(self):
         """Test async streaming through wrapper."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         async def mock_astream(*args, **kwargs):
             for chunk in [{"agent": "output1"}, {"tools": "output2"}]:
@@ -632,7 +632,7 @@ class TestLangGraphAsyncSupport:
     @pytest.mark.asyncio
     async def test_async_batch(self):
         """Test async batch through wrapper."""
-        from balaganagent.wrappers.langgraph import LangGraphWrapper
+        from sentinelai.wrappers.langgraph import LangGraphWrapper
 
         mock_graph = MagicMock()
         mock_graph.nodes = {}

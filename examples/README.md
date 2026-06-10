@@ -1,6 +1,6 @@
-# BalaganAgent Examples
+# SentinelAI Examples
 
-Example implementations demonstrating BalaganAgent with different agent frameworks and LLM providers.
+Example implementations demonstrating SentinelAI with different agent frameworks and LLM providers.
 
 ## CrewAI Examples
 
@@ -114,7 +114,7 @@ crew = build_research_crew(topic="machine learning", llm=llm)
 
 **File:** [crewai_gemini_chaos_example.py](crewai_gemini_chaos_example.py)
 
-A comprehensive chaos engineering demonstration that applies BalaganAgent to the Gemini-powered research agent, showing how agents behave under various failure conditions.
+A comprehensive chaos engineering demonstration that applies SentinelAI to the Gemini-powered research agent, showing how agents behave under various failure conditions.
 
 **Chaos Scenarios:**
 1. **Tool Failures** - Random 50% failure rate on all tools
@@ -171,7 +171,7 @@ scenario_stress_test(topic="artificial intelligence")
 
 **Expected Output:**
 ```
-🌪️  BalaganAgent — CrewAI Research Agent Chaos Testing
+🌪️  SentinelAI — CrewAI Research Agent Chaos Testing
 ======================================================================
 
 🔧 SCENARIO 1: Tool Failures (50% failure rate)
@@ -201,12 +201,12 @@ Success rate: 53.3%
 
 ---
 
-## Stress Testing with BalaganAgent
+## Stress Testing with SentinelAI
 
-Both examples can be stress-tested with BalaganAgent to inject chaos and measure reliability:
+Both examples can be stress-tested with SentinelAI to inject chaos and measure reliability:
 
 ```python
-from balaganagent.wrappers.crewai import CrewAIWrapper
+from sentinelai.wrappers.crewai import CrewAIWrapper
 from examples.crewai_gemini_research_agent import build_research_crew
 
 # Build and wrap the crew

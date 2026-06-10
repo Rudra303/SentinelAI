@@ -1,4 +1,4 @@
-"""Stress tests for the Meeting Notes agent using BalaganAgent.
+"""Stress tests for the Meeting Notes agent using SentinelAI.
 
 Tests the agent's resilience under chaos injection: tool failures,
 delays, hallucinations, and increasing chaos levels.
@@ -11,7 +11,7 @@ try:
 except ImportError:
     pytest.skip("crewai not installed", allow_module_level=True)
 
-from balaganagent.wrappers.crewai import CrewAIWrapper
+from sentinelai.wrappers.crewai import CrewAIWrapper
 
 # ---------------------------------------------------------------------------
 # Helpers – mock CrewAI objects (same pattern as existing e2e tests)
@@ -143,8 +143,8 @@ class TestMeetingNotesStressWithToolFailures:
     """Inject tool failures and verify resilience."""
 
     def test_tool_failure_injector_is_applied(self):
-        from balaganagent.injectors import ToolFailureInjector
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.injectors import ToolFailureInjector
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
 
         wrapper = _build_meeting_notes_crew()
         injector = ToolFailureInjector(ToolFailureConfig(probability=1.0, max_injections=1))
@@ -156,8 +156,8 @@ class TestMeetingNotesStressWithToolFailures:
     def test_crew_survives_partial_tool_failure(self):
         """Even if summarize_notes fails, crew kickoff shouldn't crash
         because MockCrew catches tool exceptions."""
-        from balaganagent.injectors import ToolFailureInjector
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.injectors import ToolFailureInjector
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
 
         wrapper = _build_meeting_notes_crew()
         injector = ToolFailureInjector(ToolFailureConfig(probability=1.0, max_injections=100))
@@ -168,8 +168,8 @@ class TestMeetingNotesStressWithToolFailures:
         assert result is not None
 
     def test_repeated_failures_tracked_in_metrics(self):
-        from balaganagent.injectors import ToolFailureInjector
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.injectors import ToolFailureInjector
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
 
         wrapper = _build_meeting_notes_crew()
         injector = ToolFailureInjector(ToolFailureConfig(probability=1.0, max_injections=1000))
@@ -191,8 +191,8 @@ class TestMeetingNotesStressWithDelays:
     """Inject delays and verify the crew still completes."""
 
     def test_delay_injector_applied(self):
-        from balaganagent.injectors import DelayInjector
-        from balaganagent.injectors.delay import DelayConfig
+        from sentinelai.injectors import DelayInjector
+        from sentinelai.injectors.delay import DelayConfig
 
         wrapper = _build_meeting_notes_crew()
         injector = DelayInjector(DelayConfig(probability=1.0, min_delay_ms=1, max_delay_ms=1))
@@ -202,8 +202,8 @@ class TestMeetingNotesStressWithDelays:
         assert len(tools["extract_tasks"]._injectors) >= 1
 
     def test_crew_completes_under_delays(self):
-        from balaganagent.injectors import DelayInjector
-        from balaganagent.injectors.delay import DelayConfig
+        from sentinelai.injectors import DelayInjector
+        from sentinelai.injectors.delay import DelayConfig
 
         wrapper = _build_meeting_notes_crew()
         injector = DelayInjector(DelayConfig(probability=1.0, min_delay_ms=1, max_delay_ms=2))

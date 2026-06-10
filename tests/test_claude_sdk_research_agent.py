@@ -14,9 +14,9 @@ import tempfile
 
 import pytest
 
-from balaganagent.injectors import ToolFailureInjector
-from balaganagent.injectors.tool_failure import ToolFailureConfig
-from balaganagent.wrappers.claude_sdk import ClaudeAgentSDKWrapper
+from sentinelai.injectors import ToolFailureInjector
+from sentinelai.injectors.tool_failure import ToolFailureConfig
+from sentinelai.wrappers.claude_sdk import ClaudeAgentSDKWrapper
 from examples.claude_sdk_research_agent import ResearchConfig, run_research_agent
 from examples.claude_sdk_research_tools import get_research_tools
 
@@ -177,7 +177,7 @@ class TestToolFactories:
 
 
 class TestChaosWrapperIntegration:
-    """Test integration with BalaganAgent chaos wrapper."""
+    """Test integration with SentinelAI chaos wrapper."""
 
     def test_chaos_wrapper_wraps_tools(self):
         """ClaudeAgentSDKWrapper wraps research tools."""

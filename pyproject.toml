@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "balagan-agent"
+name = "sentinel-ai"
 version = "0.5.0"
 description = "Chaos engineering framework for AI agents - stress-test agent reliability"
 readme = "README.md"
@@ -89,16 +89,16 @@ all-wrappers = [
 ]
 
 [project.scripts]
-balaganagent = "balaganagent.cli:main"
+sentinelai = "sentinelai.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/arielshad/balagan-agent"
-Documentation = "https://github.com/arielshad/balagan-agent#readme"
-Repository = "https://github.com/arielshad/balagan-agent"
-Issues = "https://github.com/arielshad/balagan-agent/issues"
+Homepage = "https://github.com/arielshad/sentinel-ai"
+Documentation = "https://github.com/arielshad/sentinel-ai#readme"
+Repository = "https://github.com/arielshad/sentinel-ai"
+Issues = "https://github.com/arielshad/sentinel-ai/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["balaganagent"]
+packages = ["sentinelai"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -140,7 +140,7 @@ exclude_lines = [
 [tool.semantic_release]
 version_pattern = "v(?P<version>\\d+\\.\\d+\\.\\d+)"
 version_variables = [
-    "balaganagent/__init__.py:__version__",
+    "sentinelai/__init__.py:__version__",
     "pyproject.toml:version",
 ]
 build_command = "pip install build && python -m build"

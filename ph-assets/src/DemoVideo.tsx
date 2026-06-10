@@ -57,7 +57,7 @@ export const DemoVideo: React.FC = () => {
             <div style={{fontSize: 56, marginBottom: 8}}>⚡</div>
           </FadeIn>
           <FadeIn delay={15}>
-            <div style={{fontSize: 52, fontWeight: 800, color: theme.text}}>BalaganAgent</div>
+            <div style={{fontSize: 52, fontWeight: 800, color: theme.text}}>SentinelAI</div>
           </FadeIn>
           <FadeIn delay={30}>
             <div style={{fontSize: 22, color: theme.accent, marginTop: 12}}>Chaos Engineering for AI Agents</div>
@@ -74,10 +74,10 @@ export const DemoVideo: React.FC = () => {
               <div style={{width: 12, height: 12, borderRadius: 6, background: '#FEBC2E'}} />
               <div style={{width: 12, height: 12, borderRadius: 6, background: '#28C840'}} />
             </div>
-            <TerminalLine text="$ pip install balagan-agent" color={theme.textMuted} delay={0} nextDelay={40} />
-            <TerminalLine text="Successfully installed balagan-agent-0.4.0" color={theme.green} delay={40} nextDelay={70} />
+            <TerminalLine text="$ pip install sentinel-ai" color={theme.textMuted} delay={0} nextDelay={40} />
+            <TerminalLine text="Successfully installed sentinel-ai-0.4.0" color={theme.green} delay={40} nextDelay={70} />
             <div style={{height: 16}} />
-            <TerminalLine text="$ balaganagent demo --chaos-level 0.5" color={theme.textMuted} delay={70} nextDelay={100} />
+            <TerminalLine text="$ sentinelai demo --chaos-level 0.5" color={theme.textMuted} delay={70} nextDelay={100} />
             <div style={{height: 8}} />
             <TerminalLine text="⚡ Running chaos experiment..." color={theme.accent} delay={100} nextDelay={120} />
             <TerminalLine text="  Injecting: tool_failure ×4, latency ×3" color={theme.text} delay={120} nextDelay={135} />
@@ -111,7 +111,7 @@ export const DemoVideo: React.FC = () => {
               <FadeIn>
                 <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24}}>
                   <div style={{fontSize: 22, fontWeight: 700, color: theme.text}}>
-                    ⚡ BalaganAgent &mdash; Chaos Report
+                    ⚡ SentinelAI &mdash; Chaos Report
                   </div>
                   <div style={{fontSize: 13, color: theme.textMuted}}>stress_test_crew &middot; chaos_level=0.5</div>
                 </div>
@@ -255,7 +255,7 @@ export const DemoVideo: React.FC = () => {
           <FadeIn delay={30}>
             <div style={{display: 'flex', gap: 16, marginTop: 16}}>
               <div style={{background: theme.accent, color: '#fff', padding: '12px 28px', borderRadius: 8, fontSize: 18, fontWeight: 700}}>
-                pip install balagan-agent
+                pip install sentinel-ai
               </div>
             </div>
           </FadeIn>

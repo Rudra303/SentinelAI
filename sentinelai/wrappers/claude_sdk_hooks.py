@@ -5,7 +5,7 @@ into a single integration class.
 
 Usage::
 
-    from balaganagent.wrappers.claude_sdk_hooks import ClaudeSDKChaosIntegration
+    from sentinelai.wrappers.claude_sdk_hooks import ClaudeSDKChaosIntegration
 
     chaos = ClaudeSDKChaosIntegration(chaos_level=0.5)
     chaos.configure_chaos(enable_tool_failures=True, enable_delays=True)

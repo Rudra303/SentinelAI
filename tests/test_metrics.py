@@ -2,14 +2,14 @@
 
 import time
 
-from balaganagent.metrics import (
+from sentinelai.metrics import (
     MetricsCollector,
     MTTRCalculator,
     RecoveryQualityAnalyzer,
     ReliabilityScorer,
 )
-from balaganagent.metrics.recovery import RecoveryQuality
-from balaganagent.metrics.reliability import ReliabilityGrade
+from sentinelai.metrics.recovery import RecoveryQuality
+from sentinelai.metrics.reliability import ReliabilityGrade
 
 
 class TestMetricsCollector:
@@ -67,7 +67,7 @@ class TestMetricsCollector:
         collector.increment("test_counter", 5)
 
         output = collector.export_prometheus()
-        assert "balaganagent_test_counter 5" in output
+        assert "sentinelai_test_counter 5" in output
 
 
 class TestMTTRCalculator:

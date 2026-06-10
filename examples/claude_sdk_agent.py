@@ -74,7 +74,7 @@ def save_report(args: dict) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Convenience list for use with BalaganAgent wrapper
+# Convenience list for use with SentinelAI wrapper
 # ---------------------------------------------------------------------------
 
 TOOLS = [

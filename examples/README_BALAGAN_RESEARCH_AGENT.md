@@ -1,6 +1,6 @@
-# BalaganAgent + Research Agent Integration Example
+# SentinelAI + Research Agent Integration Example
 
-This example demonstrates how to integrate the **BalaganAgent chaos testing framework** with the **Claude Agent SDK research agent** system (`research_agent/agent.py`).
+This example demonstrates how to integrate the **SentinelAI chaos testing framework** with the **Claude Agent SDK research agent** system (`research_agent/agent.py`).
 
 ## Overview
 
@@ -15,32 +15,32 @@ The example shows how to:
 
 ### Basic Chaos Test
 ```bash
-python3 examples/balagan_research_agent_example.py
+python3 examples/sentinel_research_agent_example.py
 ```
 
 ### Test Escalating Chaos Levels
 ```bash
-python3 examples/balagan_research_agent_example.py --test-mode escalating
+python3 examples/sentinel_research_agent_example.py --test-mode escalating
 ```
 
 ### Test Individual Tool Failures
 ```bash
-python3 examples/balagan_research_agent_example.py --test-mode targeted
+python3 examples/sentinel_research_agent_example.py --test-mode targeted
 ```
 
 ### Measure Recovery Time (MTTR)
 ```bash
-python3 examples/balagan_research_agent_example.py --test-mode mttr
+python3 examples/sentinel_research_agent_example.py --test-mode mttr
 ```
 
 ### Find System Breaking Points
 ```bash
-python3 examples/balagan_research_agent_example.py --test-mode resilience
+python3 examples/sentinel_research_agent_example.py --test-mode resilience
 ```
 
 ### Run All Tests
 ```bash
-python3 examples/balagan_research_agent_example.py --test-mode all --topic "quantum computing"
+python3 examples/sentinel_research_agent_example.py --test-mode all --topic "quantum computing"
 ```
 
 ## Command-Line Options
@@ -69,7 +69,7 @@ Outputs:
 - MTTR stats if recovery events occurred
 
 ```bash
-python3 examples/balagan_research_agent_example.py --test-mode basic
+python3 examples/sentinel_research_agent_example.py --test-mode basic
 ```
 
 ### 2. Escalating Chaos Levels (`escalating`)
@@ -155,7 +155,7 @@ Chaos Level     Workflow Success          Status
 This example shows how to add chaos testing to the Claude Agent SDK research agent. The integration pattern:
 
 ```python
-from balaganagent.wrappers.claude_sdk import ClaudeAgentSDKWrapper
+from sentinelai.wrappers.claude_sdk import ClaudeAgentSDKWrapper
 from examples.claude_sdk_research_tools import get_research_tools
 
 # 1. Create wrapper with tools and chaos level
@@ -189,7 +189,7 @@ To integrate this pattern with the full Claude Agent SDK multi-agent system:
 
 ```python
 from claude_agent_sdk import ClaudeSDKClient, ClaudeAgentOptions, AgentDefinition
-from balaganagent.wrappers.claude_sdk import ClaudeAgentSDKWrapper
+from sentinelai.wrappers.claude_sdk import ClaudeAgentSDKWrapper
 
 # Wrap your tools with chaos
 wrapper = ClaudeAgentSDKWrapper(tools=your_tools, chaos_level=0.5)
@@ -226,8 +226,8 @@ Chaos level controls the probability of failures:
 Inject failures on specific tools only:
 
 ```python
-from balaganagent.injectors import ToolFailureInjector
-from balaganagent.injectors.tool_failure import ToolFailureConfig
+from sentinelai.injectors import ToolFailureInjector
+from sentinelai.injectors.tool_failure import ToolFailureConfig
 
 wrapper = ClaudeAgentSDKWrapper(tools=tools, chaos_level=0.5)
 
@@ -255,11 +255,11 @@ for result in results:
 
 ## Example Output
 
-When running `balagan_research_agent_example.py --test-mode resilience`:
+When running `sentinel_research_agent_example.py --test-mode resilience`:
 
 ```
 ######################################################################
-#  BALAGAN AGENT + RESEARCH AGENT CHAOS TESTING
+#  SENTINEL AGENT + RESEARCH AGENT CHAOS TESTING
 ######################################################################
 
 ======================================================================
@@ -316,6 +316,6 @@ This may indicate the tools are already failing. Check your tool implementation 
 
 ## Learn More
 
-- [BalaganAgent Documentation](https://github.com/arielshad/balagan-agent)
+- [SentinelAI Documentation](https://github.com/arielshad/sentinel-ai)
 - [Claude Agent SDK](https://github.com/anthropics/anthropic-sdk-python)
 - [Chaos Engineering Principles](https://principlesofchaos.org/)

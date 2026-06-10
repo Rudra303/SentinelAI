@@ -45,4 +45,4 @@ jobs:
         if: always()
         run: |
           echo "Release step completed"
-          echo "Version: $(python -c 'import balaganagent; print(balaganagent.__version__)')"
+          echo "Version: $(python -c 'import sentinelai; print(sentinelai.__version__)')"

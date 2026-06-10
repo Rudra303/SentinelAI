@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Chaos-testing Claude Agent SDK custom tools with BalaganAgent.
+"""Chaos-testing Claude Agent SDK custom tools with SentinelAI.
 
 This example shows how to:
 1. Define custom tools following the Claude Agent SDK ``@tool`` convention.
@@ -21,7 +21,7 @@ import sys
 # Allow running this file directly from the examples/ directory.
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from balaganagent.wrappers.claude_sdk import ClaudeAgentSDKWrapper
+from sentinelai.wrappers.claude_sdk import ClaudeAgentSDKWrapper
 from examples.claude_sdk_agent import get_tool_list
 
 
@@ -84,8 +84,8 @@ def example_targeted_failure():
     print("Example 3: Targeted tool-failure injection")
     print("=" * 60 + "\n")
 
-    from balaganagent.injectors import ToolFailureInjector
-    from balaganagent.injectors.tool_failure import ToolFailureConfig
+    from sentinelai.injectors import ToolFailureInjector
+    from sentinelai.injectors.tool_failure import ToolFailureConfig
 
     wrapper = ClaudeAgentSDKWrapper(tools=get_tool_list())
     injector = ToolFailureInjector(ToolFailureConfig(probability=1.0))
@@ -106,7 +106,7 @@ def example_targeted_failure():
 
 def main():
     print("\n" + "#" * 60)
-    print("#  CLAUDE AGENT SDK + BALAGANAGENT CHAOS EXAMPLES")
+    print("#  CLAUDE AGENT SDK + SENTINELAGENT CHAOS EXAMPLES")
     print("#" * 60)
 
     example_basic_chaos()

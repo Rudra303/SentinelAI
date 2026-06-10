@@ -1,7 +1,7 @@
-"""BalaganAgent Example — Testing CrewAI Gemini Research Agent with Chaos Engineering.
+"""SentinelAI Example — Testing CrewAI Gemini Research Agent with Chaos Engineering.
 
 This script demonstrates how to apply chaos engineering to the CrewAI research agent
-using the BalaganAgent framework. It shows various failure scenarios and how agents
+using the SentinelAI framework. It shows various failure scenarios and how agents
 handle degraded conditions.
 
 Key Chaos Scenarios:
@@ -11,7 +11,7 @@ Key Chaos Scenarios:
   4. Data Corruption — Tools return malformed or incomplete data
 
 Dependencies:
-  - balaganagent
+  - sentinelai
   - crewai>=0.28.0
   - langchain-google-genai
   - python-dotenv
@@ -36,10 +36,10 @@ from crewai_gemini_research_agent import (
 )
 
 try:
-    from balaganagent import set_verbose
-    from balaganagent.wrappers.crewai import CrewAIWrapper
+    from sentinelai import set_verbose
+    from sentinelai.wrappers.crewai import CrewAIWrapper
 except ImportError:
-    print("❌ BalaganAgent not installed. Install with: pip install -e .")
+    print("❌ SentinelAI not installed. Install with: pip install -e .")
     sys.exit(1)
 
 
@@ -67,7 +67,7 @@ def scenario_tool_failures(topic: str = "quantum computing", verbose: bool = Fal
         llm = get_gemini_llm()
         crew = build_research_crew(topic=topic, llm=llm)
 
-        # Wrap with BalaganAgent - configure 50% tool failure rate
+        # Wrap with SentinelAI - configure 50% tool failure rate
         wrapper = CrewAIWrapper(crew, chaos_level=0.5, verbose=verbose)
         wrapper.configure_chaos(
             chaos_level=5.0,  # High chaos level for 50% failure rate
@@ -134,7 +134,7 @@ def scenario_latency_injection(topic: str = "blockchain", verbose: bool = False)
         llm = get_gemini_llm()
         crew = build_research_crew(topic=topic, llm=llm)
 
-        # Wrap with BalaganAgent - add delays
+        # Wrap with SentinelAI - add delays
         wrapper = CrewAIWrapper(crew, chaos_level=0.3, verbose=verbose)
         wrapper.configure_chaos(
             chaos_level=3.0,  # High chaos level for frequent delays
@@ -259,7 +259,7 @@ def scenario_data_corruption(topic: str = "cybersecurity", verbose: bool = False
         llm = get_gemini_llm()
         crew = build_research_crew(topic=topic, llm=llm)
 
-        # Wrap with BalaganAgent - enable hallucinations (data corruption)
+        # Wrap with SentinelAI - enable hallucinations (data corruption)
         wrapper = CrewAIWrapper(crew, chaos_level=0.3, verbose=verbose)
         wrapper.configure_chaos(
             chaos_level=3.0,
@@ -415,7 +415,7 @@ def main():
         set_verbose(True)
 
     print("\n" + "=" * 70)
-    print("🌪️  BalaganAgent — CrewAI Research Agent Chaos Testing")
+    print("🌪️  SentinelAI — CrewAI Research Agent Chaos Testing")
     print("=" * 70)
 
     try:
@@ -459,7 +459,7 @@ def main():
     except ImportError as e:
         print(f"\n❌ Dependency error: {e}")
         print("\nInstall required packages:")
-        print("  pip install balaganagent crewai langchain-google-genai python-dotenv")
+        print("  pip install sentinelai crewai langchain-google-genai python-dotenv")
         sys.exit(1)
     except Exception as e:
         print(f"\n❌ Unexpected error: {e}")

@@ -1,10 +1,10 @@
-# Contributing to BalaganAgent
+# Contributing to SentinelAI
 
-First off, thank you for considering contributing to BalaganAgent! It's people like you who make chaos engineering for AI agents a reality.
+First off, thank you for considering contributing to SentinelAI! It's people like you who make chaos engineering for AI agents a reality.
 
 ## 🎯 Mission
 
-BalaganAgent brings chaos engineering discipline to AI agents. Every contribution should advance this mission by:
+SentinelAI brings chaos engineering discipline to AI agents. Every contribution should advance this mission by:
 - Improving reliability testing capabilities
 - Supporting more agent frameworks
 - Enhancing metrics and observability
@@ -43,8 +43,8 @@ Quick start:
 
 ```bash
 # Clone the repository
-git clone https://github.com/arielshad/balagan-agent.git
-cd balagan-agent
+git clone https://github.com/arielshad/sentinel-ai.git
+cd sentinel-ai
 
 # Create virtual environment
 python -m venv venv
@@ -62,7 +62,7 @@ pytest
 ### 🐛 Reporting Bugs
 
 Before creating a bug report:
-- Check the [existing issues](https://github.com/arielshad/balagan-agent/issues)
+- Check the [existing issues](https://github.com/arielshad/sentinel-ai/issues)
 - Try the latest version from `main` branch
 - Collect relevant information (version, Python version, agent framework)
 
@@ -130,7 +130,7 @@ Use our [documentation issue template](.github/ISSUE_TEMPLATE/documentation.yml)
 
 #### Good First Issues
 
-Look for issues labeled [`good first issue`](https://github.com/arielshad/balagan-agent/labels/good%20first%20issue) if you're new to the project.
+Look for issues labeled [`good first issue`](https://github.com/arielshad/sentinel-ai/labels/good%20first%20issue) if you're new to the project.
 
 ## Development Workflow
 
@@ -138,9 +138,9 @@ Look for issues labeled [`good first issue`](https://github.com/arielshad/balaga
 
 ```bash
 # Fork the repository on GitHub, then:
-git clone https://github.com/YOUR_USERNAME/balagan-agent.git
-cd balagan-agent
-git remote add upstream https://github.com/arielshad/balagan-agent.git
+git clone https://github.com/YOUR_USERNAME/sentinel-ai.git
+cd sentinel-ai
+git remote add upstream https://github.com/arielshad/sentinel-ai.git
 ```
 
 ### 2. Create a Branch
@@ -173,7 +173,7 @@ git checkout -b fix/your-bug-fix
 pytest
 
 # Run with coverage
-pytest --cov=balaganagent --cov-report=html
+pytest --cov=sentinelai --cov-report=html
 
 # Run specific tests
 pytest tests/test_engine.py
@@ -181,7 +181,7 @@ pytest tests/test_engine.py
 # Run linting
 ruff check .
 black --check .
-mypy balaganagent
+mypy sentinelai
 ```
 
 ### 5. Commit Your Changes
@@ -252,16 +252,16 @@ We follow PEP 8 with some adjustments:
 
 ```bash
 # Format code
-black balaganagent tests
+black sentinelai tests
 
 # Lint code
-ruff check balaganagent tests
+ruff check sentinelai tests
 
 # Type check
-mypy balaganagent
+mypy sentinelai
 
 # Run all checks
-black . && ruff check . && mypy balaganagent && pytest
+black . && ruff check . && mypy sentinelai && pytest
 ```
 
 ### Code Organization
@@ -273,8 +273,8 @@ from typing import Optional
 
 from crewai import Crew
 
-from balaganagent.engine import ChaosEngine
-from balaganagent.injectors.base import BaseInjector
+from sentinelai.engine import ChaosEngine
+from sentinelai.injectors.base import BaseInjector
 
 # Type hints for public APIs
 def inject_fault(
@@ -322,7 +322,7 @@ tests/
 
 ```python
 import pytest
-from balaganagent.injectors import ToolFailureInjector
+from sentinelai.injectors import ToolFailureInjector
 
 class TestToolFailureInjector:
     """Test suite for tool failure injection."""
@@ -361,7 +361,7 @@ class TestToolFailureInjector:
 pytest
 
 # With coverage
-pytest --cov=balaganagent --cov-report=term-missing
+pytest --cov=sentinelai --cov-report=term-missing
 
 # Specific test file
 pytest tests/test_engine.py
@@ -479,8 +479,8 @@ Once merged:
 
 ### Getting Help
 
-- **GitHub Discussions** - Ask questions, share ideas: [Discussions](https://github.com/arielshad/balagan-agent/discussions)
-- **GitHub Issues** - Report bugs, request features: [Issues](https://github.com/arielshad/balagan-agent/issues)
+- **GitHub Discussions** - Ask questions, share ideas: [Discussions](https://github.com/arielshad/sentinel-ai/discussions)
+- **GitHub Issues** - Report bugs, request features: [Issues](https://github.com/arielshad/sentinel-ai/issues)
 
 ### Recognition
 
@@ -507,6 +507,6 @@ Don't hesitate to ask! File an issue, start a discussion, or reach out to mainta
 
 ---
 
-**Thank you for contributing to BalaganAgent!** 🎉
+**Thank you for contributing to SentinelAI!** 🎉
 
 *"Hope is not a strategy. Test your agents."*

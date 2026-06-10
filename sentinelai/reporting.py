@@ -1,5 +1,6 @@
 """Report generation for chaos experiments."""
 
+import html as html_mod
 import json
 from dataclasses import dataclass
 from datetime import datetime
@@ -144,7 +145,7 @@ class ReportGenerator:
     def to_markdown(self, report: dict[str, Any]) -> str:
         """Convert report to Markdown format."""
         lines = [
-            "# BalaganAgent Experiment Report",
+            "# SentinelAI Experiment Report",
             "",
             f"**Generated:** {report['generated_at']}",
             "",
@@ -224,6 +225,8 @@ class ReportGenerator:
 
     def to_html(self, report: dict[str, Any]) -> str:
         """Convert report to HTML format."""
+        esc = html_mod.escape  # Escape all user-supplied data to prevent XSS
+
         summary = report["summary"]
         success_rate = summary["overall_success_rate"]
 
@@ -241,13 +244,13 @@ class ReportGenerator:
         html = f"""<!DOCTYPE html>
 <html>
 <head>
-    <title>BalaganAgent Report</title>
+    <title>SentinelAI Report</title>
     <style>
         body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; margin: 40px; background: #f5f5f5; }}
         .container {{ max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
         h1 {{ color: #333; border-bottom: 2px solid #007bff; padding-bottom: 10px; }}
         h2 {{ color: #555; margin-top: 30px; }}
-        .status-badge {{ display: inline-block; padding: 5px 15px; border-radius: 20px; color: white; font-weight: bold; background: {status_color}; }}
+        .status-badge {{ display: inline-block; padding: 5px 15px; border-radius: 20px; color: white; font-weight: bold; background: {esc(status_color)}; }}
         .metric {{ display: inline-block; margin: 10px 20px 10px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; min-width: 150px; }}
         .metric-value {{ font-size: 24px; font-weight: bold; color: #333; }}
         .metric-label {{ font-size: 12px; color: #666; text-transform: uppercase; }}
@@ -260,14 +263,14 @@ class ReportGenerator:
 </head>
 <body>
     <div class="container">
-        <h1>BalaganAgent Experiment Report</h1>
-        <p>Generated: {report['generated_at']}</p>
-        <p>Status: <span class="status-badge">{status_text}</span></p>
+        <h1>SentinelAI Experiment Report</h1>
+        <p>Generated: {esc(str(report['generated_at']))}</p>
+        <p>Status: <span class="status-badge">{esc(status_text)}</span></p>
 
         <h2>Summary</h2>
         <div class="metrics">
             <div class="metric">
-                <div class="metric-value">{summary['total_experiments']}</div>
+                <div class="metric-value">{int(summary['total_experiments'])}</div>
                 <div class="metric-label">Experiments</div>
             </div>
             <div class="metric">
@@ -275,11 +278,11 @@ class ReportGenerator:
                 <div class="metric-label">Success Rate</div>
             </div>
             <div class="metric">
-                <div class="metric-value">{summary['total_operations']}</div>
+                <div class="metric-value">{int(summary['total_operations'])}</div>
                 <div class="metric-label">Operations</div>
             </div>
             <div class="metric">
-                <div class="metric-value">{summary['total_faults_injected']}</div>
+                <div class="metric-value">{int(summary['total_faults_injected'])}</div>
                 <div class="metric-label">Faults Injected</div>
             </div>
         </div>
@@ -291,13 +294,13 @@ class ReportGenerator:
             config = exp["config"]
             html += f"""
         <div class="experiment">
-            <h3>{config['name']}</h3>
+            <h3>{esc(str(config['name']))}</h3>
             <table>
-                <tr><td>Status</td><td>{exp['status']}</td></tr>
-                <tr><td>Duration</td><td>{exp['duration_seconds']:.2f}s</td></tr>
-                <tr><td>Operations</td><td>{exp['total_operations']}</td></tr>
-                <tr><td>Success Rate</td><td>{exp['success_rate']:.1%}</td></tr>
-                <tr><td>Recovery Rate</td><td>{exp['recovery_rate']:.1%}</td></tr>
+                <tr><td>Status</td><td>{esc(str(exp['status']))}</td></tr>
+                <tr><td>Duration</td><td>{float(exp['duration_seconds']):.2f}s</td></tr>
+                <tr><td>Operations</td><td>{int(exp['total_operations'])}</td></tr>
+                <tr><td>Success Rate</td><td>{float(exp['success_rate']):.1%}</td></tr>
+                <tr><td>Recovery Rate</td><td>{float(exp['recovery_rate']):.1%}</td></tr>
             </table>
         </div>
 """
@@ -306,7 +309,7 @@ class ReportGenerator:
         <h2>Recommendations</h2>
 """
         for rec in report["recommendations"]:
-            html += f'        <div class="recommendation">{rec}</div>\n'
+            html += f'        <div class="recommendation">{esc(str(rec))}</div>\n'
 
         html += """
     </div>
@@ -339,7 +342,7 @@ class ReportGenerator:
         lines = [
             "",
             f"{BOLD}{'='*60}{RESET}",
-            f"{BOLD}  BALAGANAGENT EXPERIMENT REPORT{RESET}",
+            f"{BOLD}  SENTINELAGENT EXPERIMENT REPORT{RESET}",
             f"{'='*60}",
             "",
             f"  Generated: {report['generated_at']}",

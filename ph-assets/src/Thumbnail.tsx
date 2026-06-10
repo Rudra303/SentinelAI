@@ -24,7 +24,7 @@ export const Thumbnail: React.FC = () => {
           letterSpacing: '-0.02em',
         }}
       >
-        BalaganAgent
+        SentinelAI
       </div>
       <div
         style={{

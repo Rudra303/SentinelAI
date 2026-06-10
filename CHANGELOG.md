@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.1] - 2024-01-28
 
 ### Changed
-- Updated project name to `balagan-agent` for better PyPI compatibility
+- Updated project name to `sentinel-ai` for better PyPI compatibility
 - Improved package metadata and descriptions
 
 ### Fixed
@@ -27,7 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.0] - 2024-01-15
 
 ### Added
-- Initial release of BalaganAgent
+- Initial release of SentinelAI
 - Core chaos engine with configurable chaos levels
 - Agent wrapper for tool interception and fault injection
 - Fault injectors:
@@ -47,7 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - LangChain integration
 - Experiment runner with scenario support
 - Multiple report formats (terminal, JSON, markdown, HTML)
-- CLI tool (`balaganagent` command)
+- CLI tool (`sentinelai` command)
   - Demo mode
   - Project initialization
   - Scenario execution
@@ -71,7 +71,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Guiding Principles
 
-BalaganAgent follows these versioning guidelines:
+SentinelAI follows these versioning guidelines:
 
 - **Major version (X.0.0)**: Breaking API changes
 - **Minor version (0.X.0)**: New features, backward compatible
@@ -86,6 +86,6 @@ BalaganAgent follows these versioning guidelines:
 - **Fixed**: Bug fixes
 - **Security**: Vulnerability fixes (marked with `[SECURITY]` tag)
 
-[unreleased]: https://github.com/arielshad/balagan-agent/compare/v0.1.1...HEAD
-[0.1.1]: https://github.com/arielshad/balagan-agent/compare/v0.1.0...v0.1.1
-[0.1.0]: https://github.com/arielshad/balagan-agent/releases/tag/v0.1.0
+[unreleased]: https://github.com/arielshad/sentinel-ai/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/arielshad/sentinel-ai/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/arielshad/sentinel-ai/releases/tag/v0.1.0

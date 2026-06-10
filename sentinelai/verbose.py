@@ -1,4 +1,4 @@
-"""Verbose logging utilities for BalaganAgent."""
+"""Verbose logging utilities for SentinelAI."""
 
 import sys
 import time
@@ -8,7 +8,7 @@ from typing import Any, Optional
 
 class VerboseLogger:
     """
-    Logger for verbose output in BalaganAgent.
+    Logger for verbose output in SentinelAI.
 
     Provides colored, structured logging for chaos engineering events
     including tool calls, fault injections, and experiment progress.

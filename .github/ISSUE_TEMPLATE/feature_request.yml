@@ -1,5 +1,5 @@
 name: Feature Request
-description: Suggest a new feature or enhancement for BalaganAgent
+description: Suggest a new feature or enhancement for SentinelAI
 title: "[Feature]: "
 labels: ["enhancement", "needs-triage"]
 body:
@@ -22,7 +22,7 @@ body:
     attributes:
       label: Proposed Solution
       description: Describe the solution you'd like to see
-      placeholder: I would like BalaganAgent to support...
+      placeholder: I would like SentinelAI to support...
     validations:
       required: true
 
@@ -104,5 +104,5 @@ body:
       options:
         - label: I have searched existing issues to ensure this hasn't been requested
           required: true
-        - label: This feature aligns with BalaganAgent's mission (chaos engineering for AI agents)
+        - label: This feature aligns with SentinelAI's mission (chaos engineering for AI agents)
           required: true

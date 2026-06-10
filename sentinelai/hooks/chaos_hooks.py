@@ -6,7 +6,7 @@ Read, Bash, Glob, Task, etc.) without needing custom ``@tool`` functions.
 
 Usage::
 
-    from balaganagent.hooks import ChaosHookEngine
+    from sentinelai.hooks import ChaosHookEngine
 
     engine = ChaosHookEngine(chaos_level=0.5)
     engine.configure_chaos(enable_tool_failures=True, enable_delays=True)

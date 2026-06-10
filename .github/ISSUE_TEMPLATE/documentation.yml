@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Help us improve BalaganAgent's documentation!
+        Help us improve SentinelAI's documentation!
 
   - type: dropdown
     id: doc-type
@@ -29,7 +29,7 @@ body:
     attributes:
       label: Documentation Location
       description: Where is the documentation issue? (URL or file path)
-      placeholder: "https://github.com/arielshad/balagan-agent/blob/main/README.md#L42"
+      placeholder: "https://github.com/arielshad/sentinel-ai/blob/main/README.md#L42"
     validations:
       required: false
 

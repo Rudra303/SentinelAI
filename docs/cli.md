@@ -1,23 +1,23 @@
 # CLI Reference
 
-BalaganAgent provides a CLI for running experiments without writing code.
+SentinelAI provides a CLI for running experiments without writing code.
 
 ## Installation
 
 ```bash
-pip install balagan-agent
-balaganagent --version
+pip install sentinel-ai
+sentinelai --version
 ```
 
 ## Commands
 
-### `balaganagent demo`
+### `sentinelai demo`
 
-Run a quick demo experiment to see BalaganAgent in action.
+Run a quick demo experiment to see SentinelAI in action.
 
 ```bash
-balaganagent demo --chaos-level 0.5
-balaganagent demo --chaos-level 0.75 --verbose
+sentinelai demo --chaos-level 0.5
+sentinelai demo --chaos-level 0.75 --verbose
 ```
 
 | Option | Description | Default |
@@ -25,27 +25,27 @@ balaganagent demo --chaos-level 0.75 --verbose
 | `-c, --chaos-level` | Chaos intensity (0.0–2.0) | 0.5 |
 | `-v, --verbose` | Verbose output | off |
 
-### `balaganagent init`
+### `sentinelai init`
 
 Scaffold a new chaos test project.
 
 ```bash
-balaganagent init my-chaos-tests
+sentinelai init my-chaos-tests
 ```
 
 Creates:
 
 - `scenarios/sample.json` — sample scenario
 - `agent.py` — sample agent with tools
-- `balaganagent.json` — configuration file
+- `sentinelai.json` — configuration file
 
-### `balaganagent run`
+### `sentinelai run`
 
 Run a chaos experiment from a scenario file.
 
 ```bash
-balaganagent run scenarios/search.json --chaos-level 0.75
-balaganagent run scenarios/critical.json -f html -o report.html
+sentinelai run scenarios/search.json --chaos-level 0.75
+sentinelai run scenarios/critical.json -f html -o report.html
 ```
 
 | Option | Description | Default |
@@ -57,12 +57,12 @@ balaganagent run scenarios/critical.json -f html -o report.html
 | `-f, --format` | Report format: `json`, `markdown`, `html`, `terminal` | terminal |
 | `-v, --verbose` | Verbose output | off |
 
-### `balaganagent stress`
+### `sentinelai stress`
 
 Run stress tests across multiple chaos levels.
 
 ```bash
-balaganagent stress scenarios/critical.json --levels 0.1 0.5 1.0 --iterations 50
+sentinelai stress scenarios/critical.json --levels 0.1 0.5 1.0 --iterations 50
 ```
 
 | Option | Description | Default |

@@ -1,6 +1,6 @@
-"""Example of using BalaganAgent chaos testing with research_agent multi-agent system.
+"""Example of using SentinelAI chaos testing with research_agent multi-agent system.
 
-This example demonstrates how to integrate the BalaganAgent chaos framework with the
+This example demonstrates how to integrate the SentinelAI chaos framework with the
 Claude Agent SDK's multi-agent research_agent system. It shows:
 
 1. Wrapping research tools with chaos injection
@@ -21,16 +21,16 @@ With chaos injection:
 
 Usage:
     # Run basic chaos workflow
-    python balagan_research_agent_example.py
+    python sentinel_research_agent_example.py
 
     # Run with specific topic
-    python balagan_research_agent_example.py --topic "quantum computing"
+    python sentinel_research_agent_example.py --topic "quantum computing"
 
     # Run with custom chaos level (0.0-2.0)
-    python balagan_research_agent_example.py --chaos-level 0.75
+    python sentinel_research_agent_example.py --chaos-level 0.75
 
 Dependencies:
-    - balaganagent (chaos framework)
+    - sentinelai (chaos framework)
     - claude-agent-sdk (Claude SDK integration)
     - python-dotenv (environment variables)
 """
@@ -46,9 +46,9 @@ from typing import Optional
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from balaganagent.wrappers.claude_sdk import ClaudeAgentSDKWrapper
-from balaganagent.injectors import ToolFailureInjector
-from balaganagent.injectors.tool_failure import ToolFailureConfig
+from sentinelai.wrappers.claude_sdk import ClaudeAgentSDKWrapper
+from sentinelai.injectors import ToolFailureInjector
+from sentinelai.injectors.tool_failure import ToolFailureConfig
 from examples.claude_sdk_research_tools import get_research_tools
 
 
@@ -501,7 +501,7 @@ def main():
     _create_output_dir(config.output_dir)
 
     _log("\n" + "#" * 70, config.verbose)
-    _log("#  BALAGAN AGENT + RESEARCH AGENT CHAOS TESTING", config.verbose)
+    _log("#  SENTINEL AGENT + RESEARCH AGENT CHAOS TESTING", config.verbose)
     _log("#" * 70, config.verbose)
 
     try:
@@ -541,19 +541,19 @@ def main():
 def parse_args() -> argparse.Namespace:
     """Parse command-line arguments."""
     parser = argparse.ArgumentParser(
-        description="BalaganAgent chaos testing with research_agent",
+        description="SentinelAI chaos testing with research_agent",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
             "  # Run basic chaos test\n"
-            "  python balagan_research_agent_example.py\n\n"
+            "  python sentinel_research_agent_example.py\n\n"
             "  # Run escalating chaos levels\n"
-            "  python balagan_research_agent_example.py --test-mode escalating\n\n"
+            "  python sentinel_research_agent_example.py --test-mode escalating\n\n"
             "  # Run all tests with custom topic\n"
-            "  python balagan_research_agent_example.py --test-mode all "
+            "  python sentinel_research_agent_example.py --test-mode all "
             "--topic 'machine learning' --chaos-level 0.75\n\n"
             "  # Analyze resilience patterns\n"
-            "  python balagan_research_agent_example.py --test-mode resilience\n"
+            "  python sentinel_research_agent_example.py --test-mode resilience\n"
         ),
     )
 

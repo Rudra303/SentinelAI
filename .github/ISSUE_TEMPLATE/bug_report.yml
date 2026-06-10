@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug or unexpected behavior in BalaganAgent
+description: Report a bug or unexpected behavior in SentinelAI
 title: "[Bug]: "
 labels: ["bug", "needs-triage"]
 body:
@@ -23,7 +23,7 @@ body:
       label: Steps to Reproduce
       description: Steps to reproduce the behavior
       placeholder: |
-        1. Install balaganagent
+        1. Install sentinelai
         2. Create a wrapper with '...'
         3. Run experiment with '...'
         4. See error
@@ -55,7 +55,7 @@ body:
       description: Please provide a minimal code example that reproduces the issue
       placeholder: |
         ```python
-        from balaganagent import ChaosEngine
+        from sentinelai import ChaosEngine
         # Your code here
         ```
       render: python
@@ -65,8 +65,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: BalaganAgent Version
-      description: What version of BalaganAgent are you using?
+      label: SentinelAI Version
+      description: What version of SentinelAI are you using?
       placeholder: "0.1.1"
     validations:
       required: true
@@ -125,7 +125,7 @@ body:
       options:
         - label: I have searched existing issues to ensure this bug hasn't been reported
           required: true
-        - label: I have tested this with the latest version of BalaganAgent
+        - label: I have tested this with the latest version of SentinelAI
           required: false
         - label: I have included a minimal reproducible example
           required: false

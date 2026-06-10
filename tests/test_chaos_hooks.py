@@ -16,9 +16,9 @@ if str(_DEMOS_DIR) not in sys.path:
 
 from research_agent.agent import build_agents, build_options  # noqa: E402
 
-from balaganagent.hooks.chaos_hooks import ChaosHookEngine  # noqa: E402
-from balaganagent.wrappers.claude_sdk_client import ChaosClaudeSDKClient  # noqa: E402
-from balaganagent.wrappers.claude_sdk_hooks import ClaudeSDKChaosIntegration  # noqa: E402
+from sentinelai.hooks.chaos_hooks import ChaosHookEngine  # noqa: E402
+from sentinelai.wrappers.claude_sdk_client import ChaosClaudeSDKClient  # noqa: E402
+from sentinelai.wrappers.claude_sdk_hooks import ClaudeSDKChaosIntegration  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Helpers

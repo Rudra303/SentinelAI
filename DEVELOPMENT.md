@@ -1,6 +1,6 @@
 # Development Guide
 
-Welcome to BalaganAgent development! This guide will help you set up your environment and contribute to the project.
+Welcome to SentinelAI development! This guide will help you set up your environment and contribute to the project.
 
 ## Table of Contents
 
@@ -34,8 +34,8 @@ git --version
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/arielshad/balagan-agent.git
-cd balagan-agent
+git clone https://github.com/arielshad/sentinel-ai.git
+cd sentinel-ai
 ```
 
 ### 2. Create Virtual Environment
@@ -68,13 +68,13 @@ pip install -e ".[dev,all-wrappers]"
 pytest tests/ -v
 
 # Check CLI works
-balaganagent --version
+sentinelai --version
 ```
 
 ## Project Structure
 
 ```
-balaganagent/
+sentinelai/
 ├── __init__.py              # Main exports
 ├── engine.py                # Chaos engine core
 ├── experiment.py            # Experiment definitions
@@ -115,7 +115,7 @@ tests/
 pytest
 
 # Run with coverage
-pytest --cov=balaganagent --cov-report=html
+pytest --cov=sentinelai --cov-report=html
 
 # Run with verbose output
 pytest -v
@@ -156,7 +156,7 @@ pytest tests/test_langchain_wrapper.py
 
 ### Async Tests
 
-BalaganAgent uses pytest-asyncio for async tests:
+SentinelAI uses pytest-asyncio for async tests:
 
 ```bash
 # Async tests run automatically
@@ -169,39 +169,39 @@ pytest tests/test_async*.py -v
 
 ```bash
 # Format all code
-black balaganagent/ tests/
+black sentinelai/ tests/
 
 # Check without modifying
-black --check balaganagent/ tests/
+black --check sentinelai/ tests/
 
 # Format specific file
-black balaganagent/engine.py
+black sentinelai/engine.py
 ```
 
 ### Linting with Ruff
 
 ```bash
 # Lint all code
-ruff check balaganagent/ tests/
+ruff check sentinelai/ tests/
 
 # Auto-fix issues
-ruff check --fix balaganagent/ tests/
+ruff check --fix sentinelai/ tests/
 
 # Check specific file
-ruff check balaganagent/engine.py
+ruff check sentinelai/engine.py
 ```
 
 ### Type Checking with Mypy
 
 ```bash
 # Type check entire project
-mypy balaganagent/
+mypy sentinelai/
 
 # Check specific file
-mypy balaganagent/engine.py
+mypy sentinelai/engine.py
 
 # Strict mode
-mypy --strict balaganagent/
+mypy --strict sentinelai/
 ```
 
 ### Pre-commit Checks
@@ -210,13 +210,13 @@ Before committing, run:
 
 ```bash
 # Format code
-black balaganagent/ tests/
+black sentinelai/ tests/
 
 # Lint
-ruff check --fix balaganagent/ tests/
+ruff check --fix sentinelai/ tests/
 
 # Type check
-mypy balaganagent/
+mypy sentinelai/
 
 # Run tests
 pytest
@@ -276,15 +276,15 @@ chore: update dependencies
 
 ```bash
 # Run from source
-python -m balaganagent.cli demo --chaos-level 0.5
+python -m sentinelai.cli demo --chaos-level 0.5
 
 # Or use installed command
-balaganagent demo --chaos-level 0.5
+sentinelai demo --chaos-level 0.5
 ```
 
 ### Adding CLI Commands
 
-Edit `balaganagent/cli.py`:
+Edit `sentinelai/cli.py`:
 
 ```python
 @click.command()
@@ -302,21 +302,21 @@ cli.add_command(new_command)
 
 ```bash
 # Test CLI commands
-python -m balaganagent.cli --help
-python -m balaganagent.cli demo --help
+python -m sentinelai.cli --help
+python -m sentinelai.cli demo --help
 
 # Test with different options
-python -m balaganagent.cli demo --chaos-level 0.5 --verbose
+python -m sentinelai.cli demo --chaos-level 0.5 --verbose
 ```
 
 ## Adding New Features
 
 ### Adding a New Injector
 
-1. Create file in `balaganagent/injectors/`:
+1. Create file in `sentinelai/injectors/`:
 
 ```python
-# balaganagent/injectors/my_injector.py
+# sentinelai/injectors/my_injector.py
 from dataclasses import dataclass
 from .base import Injector, InjectorConfig
 
@@ -338,7 +338,7 @@ class MyInjector(Injector):
         pass
 ```
 
-2. Register in `balaganagent/injectors/__init__.py`:
+2. Register in `sentinelai/injectors/__init__.py`:
 
 ```python
 from .my_injector import MyInjector, MyInjectorConfig
@@ -350,11 +350,11 @@ from .my_injector import MyInjector, MyInjectorConfig
 
 ### Adding a New Wrapper
 
-1. Create file in `balaganagent/wrappers/`:
+1. Create file in `sentinelai/wrappers/`:
 
 ```python
-# balaganagent/wrappers/myframework.py
-from balaganagent.wrapper import AgentWrapper
+# sentinelai/wrappers/myframework.py
+from sentinelai.wrapper import AgentWrapper
 
 class MyFrameworkWrapper(AgentWrapper):
     def __init__(self, agent, chaos_level: float = 1.0):
@@ -380,10 +380,10 @@ myframework = [
 
 ### Adding Metrics
 
-1. Create metric in `balaganagent/metrics/`:
+1. Create metric in `sentinelai/metrics/`:
 
 ```python
-# balaganagent/metrics/my_metric.py
+# sentinelai/metrics/my_metric.py
 class MyMetric:
     def __init__(self):
         self.data = []
@@ -445,7 +445,7 @@ pytest tests/test_langchain_wrapper.py -v
 pip install -e .
 
 # Verify installation
-pip list | grep balagan-agent
+pip list | grep sentinel-ai
 ```
 
 ### Test Failures
@@ -472,10 +472,10 @@ pip install types-*
 
 ```bash
 # Generate coverage report
-pytest --cov=balaganagent --cov-report=term-missing
+pytest --cov=sentinelai --cov-report=term-missing
 
 # View HTML report
-pytest --cov=balaganagent --cov-report=html
+pytest --cov=sentinelai --cov-report=html
 open htmlcov/index.html
 ```
 
@@ -506,8 +506,8 @@ pip cache purge
 - [Contributing Guide](CONTRIBUTING.md) - Contribution guidelines
 - [Security Policy](SECURITY.md) - Security and vulnerability reporting
 - [Changelog](CHANGELOG.md) - Version history
-- [Issue Tracker](https://github.com/arielshad/balagan-agent/issues)
-- [Discussions](https://github.com/arielshad/balagan-agent/discussions)
+- [Issue Tracker](https://github.com/arielshad/sentinel-ai/issues)
+- [Discussions](https://github.com/arielshad/sentinel-ai/discussions)
 
 ## Getting Help
 

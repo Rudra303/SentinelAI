@@ -1,11 +1,11 @@
 # How It Works
 
-BalaganAgent injects controlled failures into your agent's tool calls, then measures how well the agent recovers.
+SentinelAI injects controlled failures into your agent's tool calls, then measures how well the agent recovers.
 
 ## Architecture
 
 ```
-Your Agent  →  BalaganAgent Wrapper  →  Chaos Engine  →  Injectors
+Your Agent  →  SentinelAI Wrapper  →  Chaos Engine  →  Injectors
                                               ↓
                                         Metrics Collector
                                               ↓
@@ -31,8 +31,8 @@ The `chaos_level` parameter controls fault injection probability:
 Simulates tool failure modes: exceptions, timeouts, empty responses, malformed data, rate limits, auth failures, service unavailable.
 
 ```python
-from balaganagent.injectors import ToolFailureInjector
-from balaganagent.injectors.tool_failure import ToolFailureConfig, FailureMode
+from sentinelai.injectors import ToolFailureInjector
+from sentinelai.injectors.tool_failure import ToolFailureConfig, FailureMode
 
 injector = ToolFailureInjector(ToolFailureConfig(
     probability=0.1,
@@ -49,8 +49,8 @@ injector = ToolFailureInjector(ToolFailureConfig(
 Simulates network latency: fixed, uniform random, exponential, spike, degrading, jitter patterns.
 
 ```python
-from balaganagent.injectors import DelayInjector
-from balaganagent.injectors.delay import DelayConfig, DelayPattern, LatencySimulator
+from sentinelai.injectors import DelayInjector
+from sentinelai.injectors.delay import DelayConfig, DelayPattern, LatencySimulator
 
 # Use a preset
 injector = LatencySimulator.create("poor")
@@ -70,8 +70,8 @@ injector = DelayInjector(DelayConfig(
 Corrupts data to test detection: wrong values, fabricated data, contradictions, confident-wrong, partial truth, outdated info, nonexistent references.
 
 ```python
-from balaganagent.injectors import HallucinationInjector
-from balaganagent.injectors.hallucination import HallucinationConfig, HallucinationType
+from sentinelai.injectors import HallucinationInjector
+from sentinelai.injectors.hallucination import HallucinationConfig, HallucinationType
 
 injector = HallucinationInjector(HallucinationConfig(
     probability=0.05,
@@ -92,8 +92,8 @@ Corrupts agent context: truncation, reordering, duplicates, dropped entries, noi
 Simulates resource limits: token limits, time limits, cost caps, call limits, rate limits, memory limits, concurrent limits.
 
 ```python
-from balaganagent.injectors import BudgetExhaustionInjector
-from balaganagent.injectors.budget import BudgetExhaustionConfig
+from sentinelai.injectors import BudgetExhaustionInjector
+from sentinelai.injectors.budget import BudgetExhaustionConfig
 
 injector = BudgetExhaustionInjector(BudgetExhaustionConfig(
     token_limit=10000,
@@ -110,7 +110,7 @@ injector = BudgetExhaustionInjector(BudgetExhaustionConfig(
 How fast does your agent recover from a fault?
 
 ```python
-from balaganagent.metrics import MTTRCalculator
+from sentinelai.metrics import MTTRCalculator
 
 calc = MTTRCalculator()
 calc.record_failure("search", "timeout")
@@ -126,7 +126,7 @@ print(f"MTTR: {stats['mttr_seconds']:.2f}s")
 SRE-grade scoring with SLO tracking:
 
 ```python
-from balaganagent.metrics import ReliabilityScorer
+from sentinelai.metrics import ReliabilityScorer
 
 scorer = ReliabilityScorer(slos={
     "availability": 0.99,
@@ -149,7 +149,7 @@ print(f"Error Budget Remaining: {report.error_budget_remaining:.1%}")
 Generate reports in four formats:
 
 ```python
-from balaganagent.reporting import ReportGenerator
+from sentinelai.reporting import ReportGenerator
 
 gen = ReportGenerator()
 report = gen.generate_from_results(results, metrics)

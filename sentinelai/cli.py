@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Command-line interface for BalaganAgent."""
+"""Command-line interface for SentinelAI."""
 
 import argparse
 import json
@@ -15,14 +15,14 @@ from .verbose import set_verbose
 def main():
     """Main CLI entry point."""
     parser = argparse.ArgumentParser(
-        prog="balaganagent",
+        prog="sentinelai",
         description="Chaos engineering framework for AI agents",
     )
 
     parser.add_argument(
         "--version",
         action="version",
-        version=f"balaganagent {__version__}",
+        version=f"sentinelai {__version__}",
     )
 
     subparsers = parser.add_subparsers(dest="command", help="Commands")
@@ -261,7 +261,7 @@ def run_demo(args):
         set_verbose(True)
 
     print(f"\n{'='*60}")
-    print("  BALAGANAGENT DEMO")
+    print("  SENTINELAGENT DEMO")
     print(f"{'='*60}\n")
     print(f"Running demo with chaos level: {args.chaos_level}")
     if args.verbose:
@@ -354,17 +354,17 @@ class SampleAgent:
         "output_directory": "reports",
     }
 
-    config_file = directory / "balaganagent.json"
+    config_file = directory / "sentinelai.json"
     config_file.write_text(json.dumps(config, indent=2))
 
-    print(f"Initialized BalaganAgent project in {directory}")
+    print(f"Initialized SentinelAI project in {directory}")
     print(f"  Created: {scenario_file}")
     print(f"  Created: {agent_file}")
     print(f"  Created: {config_file}")
     print()
     print("To run the sample scenario:")
     print(f"  cd {directory}")
-    print("  balaganagent run scenarios/sample.json --agent agent:SampleAgent")
+    print("  sentinelai run scenarios/sample.json --agent agent:SampleAgent")
 
 
 def load_agent(agent_spec: str):
@@ -416,14 +416,53 @@ class MockAgent:
 
     def calculate(self, expression: str) -> dict:
         try:
-            # Safe eval for basic math
-            result = eval(expression, {"__builtins__": {}}, {})
+            result = _safe_math_eval(expression)
             return {"expression": expression, "result": result}
         except Exception:
             return {"expression": expression, "error": "Could not evaluate"}
 
     def fetch_data(self, resource_id: str) -> dict:
         return {"id": resource_id, "data": {"name": "Sample", "value": 42}}
+
+
+def _safe_math_eval(expression: str) -> float:
+    """Safely evaluate basic arithmetic expressions without eval().
+
+    Supports: +, -, *, /, parentheses, integers, and floats.
+    Raises ValueError for unsupported expressions.
+    """
+    import ast
+    import operator
+
+    allowed_operators = {
+        ast.Add: operator.add,
+        ast.Sub: operator.sub,
+        ast.Mult: operator.mul,
+        ast.Div: operator.truediv,
+        ast.USub: operator.neg,
+        ast.UAdd: operator.pos,
+    }
+
+    def _eval_node(node: ast.AST) -> float:
+        if isinstance(node, ast.Expression):
+            return _eval_node(node.body)
+        elif isinstance(node, ast.Constant) and isinstance(node.value, (int, float)):
+            return float(node.value)
+        elif isinstance(node, ast.BinOp):
+            op_func = allowed_operators.get(type(node.op))
+            if op_func is None:
+                raise ValueError(f"Unsupported operator: {type(node.op).__name__}")
+            return op_func(_eval_node(node.left), _eval_node(node.right))
+        elif isinstance(node, ast.UnaryOp):
+            op_func = allowed_operators.get(type(node.op))
+            if op_func is None:
+                raise ValueError(f"Unsupported unary operator: {type(node.op).__name__}")
+            return op_func(_eval_node(node.operand))
+        else:
+            raise ValueError(f"Unsupported expression node: {type(node).__name__}")
+
+    tree = ast.parse(expression.strip(), mode="eval")
+    return _eval_node(tree)
 
 
 if __name__ == "__main__":

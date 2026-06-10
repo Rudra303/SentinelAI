@@ -1,4 +1,4 @@
-"""Chaos testing the Claude Agent SDK research agent with BalaganAgent.
+"""Chaos testing the Claude Agent SDK research agent with SentinelAI.
 
 This example uses the actual research agent from
 ``claude-agent-sdk-demos/research_agent/agent.py`` and injects chaos at
@@ -35,14 +35,14 @@ from dataclasses import dataclass
 from pathlib import Path
 
 # Add project root and claude-agent-sdk-demos to path so we can import both
-# balaganagent and research_agent
+# sentinelai and research_agent
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 _DEMOS_DIR = _PROJECT_ROOT / "claude-agent-sdk-demos"
 sys.path.insert(0, str(_PROJECT_ROOT))
 sys.path.insert(0, str(_DEMOS_DIR))
 
-from balaganagent.hooks import ChaosHookEngine
-from balaganagent.wrappers.claude_sdk_hooks import ClaudeSDKChaosIntegration
+from sentinelai.hooks import ChaosHookEngine
+from sentinelai.wrappers.claude_sdk_hooks import ClaudeSDKChaosIntegration
 from research_agent.agent import build_agents, build_options
 
 
@@ -323,7 +323,7 @@ def main():
     )
 
     _log("\n" + "#" * 70, config.verbose)
-    _log("#  BALAGAN AGENT - RESEARCH AGENT CHAOS TESTING", config.verbose)
+    _log("#  SENTINEL AGENT - RESEARCH AGENT CHAOS TESTING", config.verbose)
     _log("#" * 70, config.verbose)
 
     if config.test_mode in ("basic", "all"):

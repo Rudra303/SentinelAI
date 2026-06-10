@@ -83,7 +83,7 @@ class TestAutoGenE2EWorkflow:
 
     def test_simple_conversation_no_chaos(self):
         """Test a simple conversation without chaos injection."""
-        from balaganagent.wrappers.autogen import AutoGenWrapper
+        from sentinelai.wrappers.autogen import AutoGenWrapper
 
         # Create mock agent with functions
         def get_weather(location: str = "NYC") -> str:
@@ -115,7 +115,7 @@ class TestAutoGenE2EWorkflow:
 
     def test_conversation_with_function_calls(self):
         """Test conversation that triggers function calls."""
-        from balaganagent.wrappers.autogen import AutoGenWrapper
+        from sentinelai.wrappers.autogen import AutoGenWrapper
 
         call_log = []
 
@@ -145,9 +145,9 @@ class TestAutoGenE2EWorkflow:
 
     def test_conversation_with_chaos_injection(self):
         """Test conversation with chaos injection on functions."""
-        from balaganagent.injectors import ToolFailureInjector
-        from balaganagent.injectors.tool_failure import ToolFailureConfig
-        from balaganagent.wrappers.autogen import AutoGenWrapper
+        from sentinelai.injectors import ToolFailureInjector
+        from sentinelai.injectors.tool_failure import ToolFailureConfig
+        from sentinelai.wrappers.autogen import AutoGenWrapper
 
         def api_call(endpoint: str = "api") -> dict:
             return {"endpoint": endpoint, "status": "success"}
@@ -169,7 +169,7 @@ class TestAutoGenE2EWorkflow:
 
     def test_generate_reply_workflow(self):
         """Test generate_reply workflow with metrics tracking."""
-        from balaganagent.wrappers.autogen import AutoGenWrapper
+        from sentinelai.wrappers.autogen import AutoGenWrapper
 
         def helper_func() -> str:
             return "Helper result"
@@ -196,7 +196,7 @@ class TestAutoGenE2EWorkflow:
 
     def test_experiment_context_tracking(self):
         """Test experiment context for tracking conversations."""
-        from balaganagent.wrappers.autogen import AutoGenWrapper
+        from sentinelai.wrappers.autogen import AutoGenWrapper
 
         assistant = MockAutoGenAgent(name="assistant", function_map={})
         user_proxy = MockUserProxy(name="user")
@@ -214,7 +214,7 @@ class TestAutoGenE2EWorkflow:
 
     def test_multi_agent_conversation(self):
         """Test multi-agent conversation workflow."""
-        from balaganagent.wrappers.autogen import AutoGenMultiAgentWrapper
+        from sentinelai.wrappers.autogen import AutoGenMultiAgentWrapper
 
         # Create multiple agents
         def researcher_search(query: str = "default") -> dict:
@@ -260,7 +260,7 @@ class TestAutoGenE2EWorkflow:
 
     def test_multi_agent_metrics_aggregation(self):
         """Test aggregated metrics from multi-agent conversations."""
-        from balaganagent.wrappers.autogen import AutoGenMultiAgentWrapper
+        from sentinelai.wrappers.autogen import AutoGenMultiAgentWrapper
 
         agent1 = MockAutoGenAgent(name="agent1", function_map={})
         agent2 = MockAutoGenAgent(name="agent2", function_map={})
@@ -279,7 +279,7 @@ class TestAutoGenE2EWorkflow:
 
     def test_group_chat_support(self):
         """Test group chat configuration."""
-        from balaganagent.wrappers.autogen import AutoGenWrapper
+        from sentinelai.wrappers.autogen import AutoGenWrapper
 
         agent1 = MockAutoGenAgent(name="agent1", function_map={})
         agent2 = MockAutoGenAgent(name="agent2", function_map={})
@@ -291,7 +291,7 @@ class TestAutoGenE2EWorkflow:
 
     def test_chaos_level_impact_on_functions(self):
         """Test that chaos level affects function behavior."""
-        from balaganagent.wrappers.autogen import AutoGenWrapper
+        from sentinelai.wrappers.autogen import AutoGenWrapper
 
         def reliable_func() -> str:
             return "always works"
@@ -313,7 +313,7 @@ class TestAutoGenE2EWorkflow:
 
     def test_reset_between_conversations(self):
         """Test resetting state between conversations."""
-        from balaganagent.wrappers.autogen import AutoGenWrapper
+        from sentinelai.wrappers.autogen import AutoGenWrapper
 
         assistant = MockAutoGenAgent(name="assistant", function_map={})
         user_proxy = MockUserProxy(name="user")
@@ -338,7 +338,7 @@ class TestAutoGenE2EWorkflow:
 
     def test_function_retry_on_transient_failure(self):
         """Test function retries on transient failures."""
-        from balaganagent.wrappers.autogen import AutoGenFunctionProxy
+        from sentinelai.wrappers.autogen import AutoGenFunctionProxy
 
         attempts = 0
 
@@ -364,7 +364,7 @@ class TestAutoGenE2EWorkflow:
 
     def test_function_call_history_tracking(self):
         """Test that function call history is tracked correctly."""
-        from balaganagent.wrappers.autogen import AutoGenFunctionProxy
+        from sentinelai.wrappers.autogen import AutoGenFunctionProxy
 
         def tracked_func(x: int) -> int:
             return x * 2
@@ -392,7 +392,7 @@ class TestAutoGenE2EErrorHandling:
 
     def test_missing_user_proxy_for_chat(self):
         """Test error when initiating chat without user proxy."""
-        from balaganagent.wrappers.autogen import AutoGenWrapper
+        from sentinelai.wrappers.autogen import AutoGenWrapper
 
         assistant = MockAutoGenAgent(name="assistant", function_map={})
         wrapper = AutoGenWrapper(assistant, chaos_level=0.0)
@@ -402,7 +402,7 @@ class TestAutoGenE2EErrorHandling:
 
     def test_function_exhausts_retries(self):
         """Test behavior when function exhausts all retries."""
-        from balaganagent.wrappers.autogen import AutoGenFunctionProxy
+        from sentinelai.wrappers.autogen import AutoGenFunctionProxy
 
         def always_fails() -> str:
             raise RuntimeError("Permanent failure")

@@ -1,9 +1,9 @@
-site_name: BalaganAgent
-site_url: https://arielshad.github.io/balagan-agent/
+site_name: SentinelAI
+site_url: https://arielshad.github.io/sentinel-ai/
 site_description: Chaos Engineering for AI Agents — stress-test your agents before users do.
 site_author: Ariel Shadkhan
-repo_url: https://github.com/arielshad/balagan-agent
-repo_name: arielshad/balagan-agent
+repo_url: https://github.com/arielshad/sentinel-ai
+repo_name: arielshad/sentinel-ai
 
 theme:
   name: material
@@ -58,8 +58,8 @@ markdown_extensions:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/arielshad/balagan-agent
+      link: https://github.com/arielshad/sentinel-ai
     - icon: fontawesome/brands/python
-      link: https://pypi.org/project/balagan-agent/
+      link: https://pypi.org/project/sentinel-ai/
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com/in/ariel-shadkhan/

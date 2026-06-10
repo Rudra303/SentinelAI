@@ -44,7 +44,8 @@ SentinelAI brings battle-tested chaos engineering principles (Chaos Monkey, Grem
 - :fontawesome-solid-bolt: **Fault injectors** — tool failures, delays, hallucinations, context corruption, budget exhaustion
 - :fontawesome-solid-chart-line: **Metrics** — MTTR (Mean Time To Recovery) + SRE-grade reliability scoring
 - :fontawesome-solid-file-lines: **Reports** — terminal / JSON / Markdown / HTML dashboards
-- :fontawesome-solid-plug: **Framework wrappers** — CrewAI, AutoGen, LangChain, Claude Agent SDK
+- :fontawesome-solid-plug: **Framework wrappers** — CrewAI, AutoGen, LangChain, LangGraph, Claude Agent SDK
+- :fontawesome-solid-brain: **ML-powered scheduling** — Adaptive chaos targeting via Multi-Armed Bandit (UCB1)
 
 ## How it works
 

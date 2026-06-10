@@ -189,75 +189,71 @@ class ChaosEngine:
             if self.verbose:
                 self._logger.tool_call(name, args, kwargs)
 
-            # Check if we're in an experiment
-            if self._active_experiment:
-                op = self._active_experiment.operation(name)
-                op.__enter__()
+            from contextlib import nullcontext
 
-            try:
-                # Input injection
-                if inject_on_input:
-                    args, kwargs = self._inject_on_input(name, args, kwargs, context)
+            op_context = self._active_experiment.operation(name) if self._active_experiment else nullcontext()
 
-                # Check budget before execution
-                budget_injector = self._injectors.get("budget_exhaustion")
-                if budget_injector and budget_injector.should_inject(name):
-                    result, details = budget_injector.inject(name, context)
-                    if result is not None:  # Budget exceeded
-                        self._notify_fault("budget_exhaustion", name, details)
-                        if self._active_experiment:
-                            op.record_fault("budget_exhaustion")
-                            op.record_failure("Budget exhausted")
-                            op.__exit__(None, None, None)
+            with op_context as op:
+                try:
+                    # Input injection
+                    if inject_on_input:
+                        args, kwargs = self._inject_on_input(name, args, kwargs, context)
+
+                    # Check budget before execution
+                    budget_injector = self._injectors.get("budget_exhaustion")
+                    if budget_injector and budget_injector.should_inject(name):
+                        result, details = budget_injector.inject(name, context)
+                        if result is not None:  # Budget exceeded
+                            self._notify_fault("budget_exhaustion", name, details)
+                            if op:
+                                op.record_fault("budget_exhaustion")
+                                op.record_failure("Budget exhausted")
+                            return result
+
+                    # Apply delay if configured
+                    delay_injector = self._injectors.get("delay")
+                    if delay_injector and delay_injector.should_inject(name):
+                        delay_ms, details = delay_injector.inject(name, context)
+                        self._notify_fault("delay", name, details)
+                        if op:
+                            op.record_fault("delay")
+
+                    # Check for tool failure
+                    failure_injector = self._injectors.get("tool_failure")
+                    if failure_injector and failure_injector.should_inject(name):
+                        result, details = failure_injector.inject(name, context)
+                        self._notify_fault("tool_failure", name, details)
+                        if op:
+                            op.record_fault("tool_failure")
+                            op.record_failure(details.get("error_message", "Tool failure"))
                         return result
 
-                # Apply delay if configured
-                delay_injector = self._injectors.get("delay")
-                if delay_injector and delay_injector.should_inject(name):
-                    delay_ms, details = delay_injector.inject(name, context)
-                    self._notify_fault("delay", name, details)
-                    if self._active_experiment:
-                        op.record_fault("delay")
+                    # Execute the actual tool
+                    result = tool_func(*args, **kwargs)
 
-                # Check for tool failure
-                failure_injector = self._injectors.get("tool_failure")
-                if failure_injector and failure_injector.should_inject(name):
-                    result, details = failure_injector.inject(name, context)
-                    self._notify_fault("tool_failure", name, details)
-                    if self._active_experiment:
-                        op.record_fault("tool_failure")
-                        op.record_failure(details.get("error_message", "Tool failure"))
-                        op.__exit__(None, None, None)
+                    # Output injection
+                    if inject_on_output:
+                        result = self._inject_on_output(name, result, context)
+
+                    # Verbose logging: success
+                    if self.verbose:
+                        duration_ms = (time.time() - start_time) * 1000
+                        self._logger.tool_result(result, duration_ms)
+
+                    if op:
+                        op.record_success()
+
                     return result
 
-                # Execute the actual tool
-                result = tool_func(*args, **kwargs)
+                except Exception as e:
+                    # Verbose logging: error
+                    if self.verbose:
+                        duration_ms = (time.time() - start_time) * 1000
+                        self._logger.tool_error(e, duration_ms)
 
-                # Output injection
-                if inject_on_output:
-                    result = self._inject_on_output(name, result, context)
-
-                # Verbose logging: success
-                if self.verbose:
-                    duration_ms = (time.time() - start_time) * 1000
-                    self._logger.tool_result(result, duration_ms)
-
-                if self._active_experiment:
-                    op.record_success()
-                    op.__exit__(None, None, None)
-
-                return result
-
-            except Exception as e:
-                # Verbose logging: error
-                if self.verbose:
-                    duration_ms = (time.time() - start_time) * 1000
-                    self._logger.tool_error(e, duration_ms)
-
-                if self._active_experiment:
-                    op.record_failure(str(e))
-                    op.__exit__(type(e), e, e.__traceback__)
-                raise
+                    if op:
+                        op.record_failure(str(e))
+                    raise
 
         wrapped.__name__ = name
         wrapped.__doc__ = tool_func.__doc__
@@ -313,8 +309,9 @@ class ChaosEngine:
         for callback in self._on_fault_injected:
             try:
                 callback(fault_type, tool_name, details)
-            except Exception:
-                pass  # Don't let callback errors affect operation
+            except Exception as e:
+                if self.verbose:
+                    self._logger.log(f"Fault callback error: {e}", "yellow")
 
     def on_fault_injected(self, callback: Callable):
         """Register a callback for fault injection events."""

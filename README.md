@@ -24,7 +24,7 @@ Everyone demos agents. Nobody stress-tests them.
 
 SentinelAI is a reliability testing framework that stress-tests AI agents through controlled fault injection—because your agent will fail in production, and you should know how it handles it.
 
-> **Latest: v0.4.0** — [Changelog](CHANGELOG.md) · [Full Documentation](https://arielshad.github.io/sentinel-ai/)
+> **Latest: v0.5.0** — [Changelog](CHANGELOG.md) · [Full Documentation](https://arielshad.github.io/sentinel-ai/)
 
 ```bash
 pip install sentinel-ai        # Install
@@ -443,6 +443,9 @@ sentinelai/
 ├── runner.py            # Experiment runner
 ├── reporting.py         # Report generation
 ├── cli.py               # Command-line interface
+├── testing.py           # MockAgent & test utilities
+├── verbose.py           # Logging & colored output
+├── py.typed             # PEP 561 type stub marker
 ├── injectors/           # Fault injectors
 │   ├── base.py          # Base injector class
 │   ├── tool_failure.py  # Tool failure injection
@@ -450,11 +453,22 @@ sentinelai/
 │   ├── hallucination.py # Data corruption
 │   ├── context.py       # Context corruption
 │   └── budget.py        # Budget exhaustion
-└── metrics/             # Metrics collection
-    ├── collector.py     # General metrics
-    ├── mttr.py          # MTTR calculation
-    ├── recovery.py      # Recovery quality
-    └── reliability.py   # Reliability scoring
+├── metrics/             # Metrics collection
+│   ├── collector.py     # General metrics
+│   ├── mttr.py          # MTTR calculation
+│   ├── recovery.py      # Recovery quality
+│   └── reliability.py   # Reliability scoring
+├── wrappers/            # Framework integrations
+│   ├── base.py          # BaseChaosProxy & BaseChaosWrapper
+│   ├── crewai.py        # CrewAI adapter
+│   ├── autogen.py       # AutoGen adapter
+│   ├── langchain.py     # LangChain adapter
+│   ├── langgraph.py     # LangGraph adapter
+│   └── claude_sdk.py    # Claude Agent SDK adapter
+├── hooks/               # SDK hooks
+│   └── chaos_hooks.py   # Async hooks for Claude SDK
+└── ml/                  # AI/ML features
+    └── scheduler.py     # Adaptive Chaos Scheduling (UCB1)
 ```
 
 ## Documentation
@@ -504,26 +518,34 @@ Thanks to all our contributors!
 
 ## Roadmap
 
-### Current (v0.1.x)
-- ✅ Core chaos engine
-- ✅ Basic injectors (tool failure, delay, hallucination, context, budget)
-- ✅ CrewAI, AutoGen, LangChain wrappers
-- ✅ MTTR and reliability metrics
-- ✅ Multi-format reporting
+### Completed (v0.5.0) ✅
+- ✅ Core chaos engine with fault injection
+- ✅ 5 fault injectors (tool failure, delay, hallucination, context corruption, budget exhaustion)
+- ✅ Framework wrappers — CrewAI, AutoGen, LangChain, LangGraph, Claude Agent SDK
+- ✅ MTTR, reliability scoring, recovery quality metrics
+- ✅ Multi-format reporting (terminal, JSON, Markdown, HTML)
+- ✅ CLI with `demo`, `run`, `stress`, `init` commands
+- ✅ Comprehensive test suite (unit, integration, BDD, E2E)
+- ✅ LangGraph node-level chaos injection
+- ✅ Advanced metrics (latency percentiles, error budgets, SLO tracking)
+- ✅ ML-powered Adaptive Chaos Scheduling (Multi-Armed Bandit)
+- ✅ Thread-safe metrics collectors and injectors
+- ✅ Pre-commit hooks and expanded CI matrix (Python 3.10–3.12)
 
-### Coming Soon (v0.2.x)
-- 🔄 Real-time chaos injection during agent execution
-- 🔄 Advanced metrics (latency percentiles, error budgets)
-- 🔄 Chaos schedules and campaigns
-- 🔄 Web dashboard for visualization
-- 🔄 More agent framework integrations (LangGraph, AutoGPT)
+### In Progress (v0.6.x) 🔄
+- 🔄 Async chaos engine and experiment runner
+- 🔄 Entry-point based plugin system for custom injectors
+- 🔄 Interactive HTML dashboard with Chart.js
+- 🔄 OpenTelemetry metrics export
+- 🔄 CLI upgrade with `typer` + `rich`
 
-### Future (v0.3.x+)
+### Future (v0.7.x+) 📋
 - 📋 Distributed chaos experiments
-- 📋 ML-powered failure prediction
-- 📋 Custom injector plugins
-- 📋 Production chaos (with safeguards)
+- 📋 ML-powered failure prediction module
+- 📋 Pydantic v2 config with TOML/YAML file loading
+- 📋 Production chaos mode (with safeguards)
 - 📋 Cost impact analysis
+- 📋 Docker image and GitHub Action for CI chaos testing
 
 Have an idea? [Open a discussion](https://github.com/arielshad/sentinel-ai/discussions)!
 

@@ -71,3 +71,6 @@ site/
 ph-assets/node_modules/
 
 .agents/skills/remotion-best-practices/
+.agents/
+.claude/
+.entire/

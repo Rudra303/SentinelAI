@@ -1,6 +1,7 @@
 """Mean Time To Recovery (MTTR) calculation for AI agents."""
 
 import statistics
+import threading
 import time
 from dataclasses import dataclass
 from typing import Any, Optional
@@ -50,18 +51,13 @@ class MTTRCalculator:
 
     MTTR is a key reliability metric that measures how quickly
     an agent can recover from failures.
-
-    Tracks:
-    - Time from fault injection to successful operation
-    - Recovery patterns (retry, fallback, escalation)
-    - Recovery success rates
-    - Recovery time distributions
     """
 
     def __init__(self):
         self._recovery_events: list[RecoveryEvent] = []
         self._active_failures: dict[str, FailureWindow] = {}
         self._completed_windows: list[FailureWindow] = []
+        self._lock = threading.Lock()
 
     def record_failure(
         self,
@@ -70,11 +66,12 @@ class MTTRCalculator:
     ):
         """Record the start of a failure."""
         key = f"{operation_name}:{fault_type}"
-        if key not in self._active_failures:
-            self._active_failures[key] = FailureWindow(
-                start_time=time.time(),
-            )
-        self._active_failures[key].operations_during_failure += 1
+        with self._lock:
+            if key not in self._active_failures:
+                self._active_failures[key] = FailureWindow(
+                    start_time=time.time(),
+                )
+            self._active_failures[key].operations_during_failure += 1
 
     def record_recovery(
         self,
@@ -88,59 +85,50 @@ class MTTRCalculator:
         key = f"{operation_name}:{fault_type}"
         now = time.time()
 
-        # Find or create failure window
-        if key in self._active_failures:
-            window = self._active_failures[key]
-            failure_time = window.start_time
-        else:
-            # Recovery without tracked failure (retroactive)
-            failure_time = now - 1.0  # Assume 1 second ago
+        with self._lock:
+            if key in self._active_failures:
+                window = self._active_failures[key]
+                failure_time = window.start_time
+            else:
+                failure_time = now - 1.0
 
-        event = RecoveryEvent(
-            operation_name=operation_name,
-            fault_type=fault_type,
-            failure_time=failure_time,
-            recovery_time=now,
-            recovery_method=recovery_method,
-            retries=retries,
-            success=success,
-        )
+            event = RecoveryEvent(
+                operation_name=operation_name,
+                fault_type=fault_type,
+                failure_time=failure_time,
+                recovery_time=now,
+                recovery_method=recovery_method,
+                retries=retries,
+                success=success,
+            )
 
-        self._recovery_events.append(event)
+            self._recovery_events.append(event)
 
-        # Close failure window
-        if key in self._active_failures:
-            window = self._active_failures[key]
-            window.end_time = now
-            window.recovery_event = event
-            self._completed_windows.append(window)
-            del self._active_failures[key]
+            if key in self._active_failures:
+                window = self._active_failures[key]
+                window.end_time = now
+                window.recovery_event = event
+                self._completed_windows.append(window)
+                del self._active_failures[key]
 
     def calculate_mttr(self) -> float:
-        """
-        Calculate Mean Time To Recovery in seconds.
-
-        Returns:
-            MTTR in seconds, or 0 if no recoveries recorded.
-        """
-        if not self._recovery_events:
-            return 0.0
-
-        recovery_times = [e.time_to_recover for e in self._recovery_events if e.success]
+        with self._lock:
+            if not self._recovery_events:
+                return 0.0
+            recovery_times = [e.time_to_recover for e in self._recovery_events if e.success]
+            
         if not recovery_times:
             return 0.0
-
         return statistics.mean(recovery_times)
 
     def calculate_mttr_by_fault_type(self) -> dict[str, float]:
-        """Calculate MTTR broken down by fault type."""
         by_type: dict[str, list[float]] = {}
-
-        for event in self._recovery_events:
-            if event.success:
-                if event.fault_type not in by_type:
-                    by_type[event.fault_type] = []
-                by_type[event.fault_type].append(event.time_to_recover)
+        with self._lock:
+            for event in self._recovery_events:
+                if event.success:
+                    if event.fault_type not in by_type:
+                        by_type[event.fault_type] = []
+                    by_type[event.fault_type].append(event.time_to_recover)
 
         return {
             fault_type: statistics.mean(times) if times else 0.0
@@ -148,20 +136,19 @@ class MTTRCalculator:
         }
 
     def calculate_mttr_by_operation(self) -> dict[str, float]:
-        """Calculate MTTR broken down by operation."""
         by_op: dict[str, list[float]] = {}
-
-        for event in self._recovery_events:
-            if event.success:
-                if event.operation_name not in by_op:
-                    by_op[event.operation_name] = []
-                by_op[event.operation_name].append(event.time_to_recover)
+        with self._lock:
+            for event in self._recovery_events:
+                if event.success:
+                    if event.operation_name not in by_op:
+                        by_op[event.operation_name] = []
+                    by_op[event.operation_name].append(event.time_to_recover)
 
         return {op: statistics.mean(times) if times else 0.0 for op, times in by_op.items()}
 
     def calculate_mttr_percentiles(self) -> dict[str, float]:
-        """Calculate MTTR percentiles."""
-        recovery_times = sorted([e.time_to_recover for e in self._recovery_events if e.success])
+        with self._lock:
+            recovery_times = sorted([e.time_to_recover for e in self._recovery_events if e.success])
 
         if not recovery_times:
             return {"p50": 0.0, "p90": 0.0, "p95": 0.0, "p99": 0.0}
@@ -178,18 +165,20 @@ class MTTRCalculator:
         }
 
     def get_recovery_stats(self) -> dict[str, Any]:
-        """Get comprehensive recovery statistics."""
-        total_events = len(self._recovery_events)
-        successful_events = sum(1 for e in self._recovery_events if e.success)
-        failed_events = total_events - successful_events
+        with self._lock:
+            total_events = len(self._recovery_events)
+            successful_events = sum(1 for e in self._recovery_events if e.success)
+            failed_events = total_events - successful_events
 
-        recovery_methods: dict[str, int] = {}
-        total_retries = 0
+            recovery_methods: dict[str, int] = {}
+            total_retries = 0
 
-        for event in self._recovery_events:
-            method = event.recovery_method
-            recovery_methods[method] = recovery_methods.get(method, 0) + 1
-            total_retries += event.retries
+            for event in self._recovery_events:
+                method = event.recovery_method
+                recovery_methods[method] = recovery_methods.get(method, 0) + 1
+                total_retries += event.retries
+                
+            active_failures_count = len(self._active_failures)
 
         return {
             "total_recoveries": total_events,
@@ -203,22 +192,24 @@ class MTTRCalculator:
             "recovery_methods": recovery_methods,
             "total_retries": total_retries,
             "avg_retries_per_recovery": total_retries / total_events if total_events > 0 else 0,
-            "active_failures": len(self._active_failures),
+            "active_failures": active_failures_count,
         }
 
     def get_active_failures(self) -> list[dict[str, Any]]:
-        """Get currently active (unrecovered) failures."""
-        return [
-            {
-                "key": key,
-                "duration_seconds": window.duration,
-                "operations_affected": window.operations_during_failure,
-            }
-            for key, window in self._active_failures.items()
-        ]
+        with self._lock:
+            return [
+                {
+                    "key": key,
+                    "duration_seconds": window.duration,
+                    "operations_affected": window.operations_during_failure,
+                }
+                for key, window in self._active_failures.items()
+            ]
 
     def get_recovery_timeline(self) -> list[dict[str, Any]]:
-        """Get timeline of recovery events."""
+        with self._lock:
+            events = self._recovery_events.copy()
+            
         return [
             {
                 "operation": event.operation_name,
@@ -230,11 +221,11 @@ class MTTRCalculator:
                 "retries": event.retries,
                 "success": event.success,
             }
-            for event in sorted(self._recovery_events, key=lambda e: e.recovery_time)
+            for event in sorted(events, key=lambda e: e.recovery_time)
         ]
 
     def reset(self):
-        """Reset all tracked data."""
-        self._recovery_events.clear()
-        self._active_failures.clear()
-        self._completed_windows.clear()
+        with self._lock:
+            self._recovery_events.clear()
+            self._active_failures.clear()
+            self._completed_windows.clear()

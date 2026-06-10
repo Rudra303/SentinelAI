@@ -1,6 +1,7 @@
 """Base classes for fault injectors."""
 
 import random
+import threading
 import time
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
@@ -56,6 +57,7 @@ class BaseInjector(ABC):
         self._last_injection_time = 0.0
         self._events: list[InjectionEvent] = []
         self._id = f"{self.fault_type.value}_{id(self)}"
+        self._lock = threading.Lock()
 
     @property
     @abstractmethod
@@ -82,17 +84,18 @@ class BaseInjector(ABC):
         if not self.config.enabled:
             return False
 
-        # Check max injections limit
-        if (
-            self.config.max_injections is not None
-            and self._injection_count >= self.config.max_injections
-        ):
-            return False
+        with self._lock:
+            # Check max injections limit
+            if (
+                self.config.max_injections is not None
+                and self._injection_count >= self.config.max_injections
+            ):
+                return False
 
-        # Check cooldown
-        current_time = time.time()
-        if current_time - self._last_injection_time < self.config.cooldown_seconds:
-            return False
+            # Check cooldown
+            current_time = time.time()
+            if current_time - self._last_injection_time < self.config.cooldown_seconds:
+                return False
 
         # Check target filters
         if self.config.target_tools and target not in self.config.target_tools:
@@ -101,7 +104,8 @@ class BaseInjector(ABC):
             return False
 
         # Random probability check
-        return self._rng.random() < self.config.probability
+        with self._lock:
+            return self._rng.random() < self.config.probability
 
     def record_injection(self, target: str, details: dict[str, Any]) -> InjectionEvent:
         """Record an injection event."""
@@ -112,22 +116,25 @@ class BaseInjector(ABC):
             details=details,
             injector_id=self._id,
         )
-        self._events.append(event)
-        self._injection_count += 1
-        self._last_injection_time = event.timestamp
+        with self._lock:
+            self._events.append(event)
+            self._injection_count += 1
+            self._last_injection_time = event.timestamp
         return event
 
     def get_events(self) -> list[InjectionEvent]:
         """Get all injection events."""
-        return self._events.copy()
+        with self._lock:
+            return self._events.copy()
 
     def reset(self):
         """Reset injector state."""
-        self._injection_count = 0
-        self._last_injection_time = 0.0
-        self._events.clear()
-        if self.config.seed is not None:
-            self._rng.seed(self.config.seed)
+        with self._lock:
+            self._injection_count = 0
+            self._last_injection_time = 0.0
+            self._events.clear()
+            if self.config.seed is not None:
+                self._rng.seed(self.config.seed)
 
 
 class CompositeInjector(BaseInjector):

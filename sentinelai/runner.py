@@ -17,6 +17,12 @@ from .verbose import get_logger
 from .wrapper import AgentWrapper
 
 
+class ValidationFailure(Exception):
+    """Raised when an expected result does not match the actual result."""
+    pass
+
+
+
 @dataclass
 class Scenario:
     """A test scenario to run against an agent."""
@@ -152,17 +158,38 @@ class ExperimentRunner:
 
                             op.record_success()
 
+                            # Validate operation result if expected value is provided
+                            if "expected" in operation:
+                                if result != operation["expected"]:
+                                    raise ValidationFailure(
+                                        f"Operation '{tool_name}' failed validation: expected {operation['expected']}, got {result}"
+                                    )
+
                         except Exception as e:
                             op.record_failure(str(e))
                             self._reliability_scorer.record_operation(
                                 success=False,
                                 latency_ms=time.time() - start_time,
                             )
+                            # Re-raise so the failure is caught by the outer loop
+                            raise
 
-                # Validate expected results if provided
+                # Validate scenario expected results if provided
                 if scenario.expected_results:
-                    # Basic validation - can be extended
-                    pass
+                    for key, expected_val in scenario.expected_results.items():
+                        # We might need a way to extract state here, but for now we check
+                        # against the last result if it's a dict. This is a basic implementation.
+                        if isinstance(result, dict) and key in result:
+                            if result[key] != expected_val:
+                                raise ValidationFailure(
+                                    f"Scenario validation failed for '{key}': expected {expected_val}, got {result[key]}"
+                                )
+                        else:
+                            # If result isn't a dict or key is missing, we fail the validation
+                            # since we can't verify the expected state
+                            raise ValidationFailure(
+                                f"Scenario validation failed: key '{key}' not found in final result {result}"
+                            )
 
             except Exception as e:
                 passed = False

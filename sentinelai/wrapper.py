@@ -143,8 +143,9 @@ class ToolProxy:
         for callback in self._before_call:
             try:
                 callback(self.name, args, kwargs)
-            except Exception:
-                pass
+            except Exception as e:
+                if self.verbose:
+                    self._logger.log(f"Before-call callback error: {e}", "yellow")
 
         retries = 0
         last_error = None
@@ -218,8 +219,9 @@ class ToolProxy:
                 for callback in self._after_call:
                     try:
                         callback(self.name, result, call.duration_ms)
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        if self.verbose:
+                            self._logger.log(f"After-call callback error: {e}", "yellow")
 
                 return result
 
@@ -232,8 +234,9 @@ class ToolProxy:
                 for callback in self._on_error:
                     try:
                         callback(self.name, e, retries)
-                    except Exception:
-                        pass
+                    except Exception as cb_err:
+                        if self.verbose:
+                            self._logger.log(f"Error callback error: {cb_err}", "yellow")
 
                 if retries <= self.max_retries:
                     # Verbose logging: retry
@@ -244,8 +247,9 @@ class ToolProxy:
                     for callback in self._on_retry:
                         try:
                             callback(self.name, retries, self.retry_delay_seconds)
-                        except Exception:
-                            pass
+                        except Exception as cb_err:
+                            if self.verbose:
+                                self._logger.log(f"Retry callback error: {cb_err}", "yellow")
 
                     time.sleep(self.retry_delay_seconds)
                 else:

@@ -1,0 +1,134 @@
+name: Publish to PyPI
+
+on:
+  push:
+    branches:
+      - main
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      test-pypi:
+        description: 'Publish to TestPyPI instead of PyPI'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  id-token: write  # Required for trusted publishing
+
+jobs:
+  check-version:
+    name: Check if version is new
+    runs-on: ubuntu-latest
+    outputs:
+      should-publish: ${{ steps.version-check.outputs.should-publish }}
+      version: ${{ steps.get-version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Get version from pyproject.toml
+        id: get-version
+        run: |
+          VERSION=$(grep '^version = ' pyproject.toml | sed 's/version = "\(.*\)"/\1/')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Current version: $VERSION"
+
+      - name: Check if version exists on PyPI
+        id: version-check
+        run: |
+          VERSION="${{ steps.get-version.outputs.version }}"
+
+          # For manual workflow dispatch or releases, always publish
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" || "${{ github.event_name }}" == "release" ]]; then
+            echo "should-publish=true" >> $GITHUB_OUTPUT
+            echo "Manual trigger or release - will publish"
+            exit 0
+          fi
+
+          # Check if version exists on PyPI
+          if pip index versions sentinel-ai 2>&1 | grep -q "$VERSION"; then
+            echo "should-publish=false" >> $GITHUB_OUTPUT
+            echo "Version $VERSION already exists on PyPI - skipping"
+          else
+            echo "should-publish=true" >> $GITHUB_OUTPUT
+            echo "Version $VERSION is new - will publish"
+          fi
+
+  build:
+    name: Build distribution
+    needs: check-version
+    if: needs.check-version.outputs.should-publish == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install build dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install build
+
+      - name: Build distribution
+        run: python -m build
+
+      - name: Store distribution packages
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+  publish-to-pypi:
+    name: Publish to PyPI
+    if: needs.check-version.outputs.should-publish == 'true' && (github.event_name == 'push' || github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && !inputs.test-pypi))
+    needs: [check-version, build]
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/sentinel-ai/
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          # Uses PyPI Trusted Publishing by default (no token needed)
+          # To use API token instead, add PYPI_API_TOKEN to GitHub secrets
+          # and uncomment the line below:
+          # password: ${{ secrets.PYPI_API_TOKEN }}
+          print-hash: true
+
+  publish-to-testpypi:
+    name: Publish to TestPyPI
+    if: needs.check-version.outputs.should-publish == 'true' && github.event_name == 'workflow_dispatch' && inputs.test-pypi
+    needs: [check-version, build]
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/project/sentinel-ai/
+    steps:
+      - name: Download distributions
+        uses: actions/download-artifact@v4
+        with:
+          name: python-package-distributions
+          path: dist/
+
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          print-hash: true

@@ -1,0 +1,63 @@
+site_name: SentinelAI
+site_url: https://Rudra303.github.io/sentinel-ai/
+site_description: Chaos Engineering for AI Agents — stress-test your agents before users do.
+site_author: Rudra Pratap Singh
+repo_url: https://github.com/Rudra303/SentinelAI
+repo_name: Rudra303/SentinelAI
+
+theme:
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.sections
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - How It Works: how-it-works.md
+  - Integrations: integrations.md
+  - CLI Reference: cli.md
+  - Examples: examples.md
+  - Roadmap: roadmap.md
+  - FAQ: faq.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - tables
+  - toc:
+      permalink: true
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Rudra303/SentinelAI
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/sentinel-ai/

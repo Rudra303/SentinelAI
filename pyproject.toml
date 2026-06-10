@@ -1,0 +1,152 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sentinel-ai"
+version = "0.5.0"
+description = "Chaos engineering framework for AI agents - stress-test agent reliability"
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.10"
+authors = [
+    { name = "Rudra Pratap Singh" },
+]
+keywords = [
+    "ai",
+    "agents",
+    "chaos-engineering",
+    "testing",
+    "reliability",
+    "llm",
+    "stress-testing",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Testing",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = [
+    "claude-agent-sdk>=0.1.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0",
+    "pytest-asyncio>=0.21",
+    "pytest-cov>=4.0",
+    "pytest-bdd>=7.0",
+    "black>=23.0",
+    "ruff>=0.1",
+    "mypy>=1.0",
+    "python-semantic-release>=9.0.0",
+]
+
+# Optional dependencies for specific agent wrappers
+crewai = [
+    "crewai>=0.28.0",
+]
+
+crewai-gemini = [
+    "crewai>=0.28.0",
+    "langchain-google-genai>=2.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+autogen = [
+    "pyautogen>=0.2.0",
+]
+
+claude-agent-sdk = [
+    "claude-agent-sdk>=0.1.0",
+]
+
+langchain = [
+    "langchain>=0.1.0",
+    "langchain-core>=0.1.0",
+]
+
+langgraph = [
+    "langgraph>=0.2.0",
+    "langchain-core>=0.1.0",
+]
+
+all-wrappers = [
+    "crewai>=0.28.0",
+    "pyautogen>=0.2.0",
+    "langchain>=0.1.0",
+    "langchain-core>=0.1.0",
+    "langgraph>=0.2.0",
+    "langchain-google-genai>=2.0.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.scripts]
+sentinelai = "sentinelai.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/Rudra303/SentinelAI"
+Documentation = "https://github.com/Rudra303/SentinelAI#readme"
+Repository = "https://github.com/Rudra303/SentinelAI"
+Issues = "https://github.com/Rudra303/SentinelAI/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["sentinelai"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W"]
+ignore = ["E501", "N806", "N818"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.coverage.run]
+relative_files = true
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+    "class .*Protocol.*:",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.semantic_release]
+version_pattern = "v(?P<version>\\d+\\.\\d+\\.\\d+)"
+version_variables = [
+    "sentinelai/__init__.py:__version__",
+    "pyproject.toml:version",
+]
+build_command = "pip install build && python -m build"
+hvcs = "github"
+branch = "main"
+changelog_file = "CHANGELOG.md"
+commit_message = "chore(release): {version}\n\nAutomatically generated release by python-semantic-release"
+tag_message = "chore(release): {version} [skip ci]"
+allow_zero_version = true
